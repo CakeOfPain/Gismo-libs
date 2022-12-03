@@ -1,0 +1,51 @@
+include * @Gismo.UI.Frame
+include * @Gismo.UI.Basics
+
+// tell
+
+TellParams(
+	txt tell_prompt
+) table;
+
+tell(txt title, txt prompt) {
+	frame := createFrame(title, 200, 100)
+	params := TellParams(prompt)
+	frame.mainloop(tell_content, fmt(params))
+	frame.destroyFrame()
+}
+
+tell_content(Frame frame, TellParams params) {
+	frame.label(params.tell_prompt)
+	frame.endOfLine()
+	if frame.button("OK")
+		frame.quit = true
+}
+
+// Choose
+ChooseParams(
+	txt choose_prompt,
+	txt choose_ans1,
+	txt choose_ans2,
+	txt choose_res
+) table;
+
+choose(txt title, txt prompt, txt ans1, txt ans2) txt {
+	frame := createFrame(title, 200, 100)
+	params := ChooseParams(prompt, ans1, ans2, "")
+	frame.mainloop(choose_content, fmt(params))
+	frame.destroyFrame()
+	return params.choose_res
+}
+
+choose_content(Frame frame, ChooseParams params) {
+	frame.label(params.choose_prompt)
+	frame.endOfLine()
+	if frame.button(params.choose_ans1) {
+		frame.quit = true
+		params.choose_res = params.choose_ans1
+	}
+	if frame.button(params.choose_ans2) {
+		frame.quit = true
+		params.choose_res = params.choose_ans2
+	}
+}

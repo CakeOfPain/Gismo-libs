@@ -1,0 +1,158 @@
+
+eval (txt calculation) double {
+	tokens is tokenize (calculation)
+	return parse (tokens)
+}
+
+parse_pos is uint
+
+parse_advance (txt[] tokens) txt {
+	if !parse_hasNext (tokens) return "none"
+	index = parse_pos
+	parse_pos = parse_pos + 1
+	return tokens[index]
+}
+
+parse_peek (txt[] tokens) txt {
+	if !parse_hasNext (tokens) return "none"
+	return tokens[parse_pos]
+}
+
+parse_hasNext (txt[] tokens) ubyte {
+	return parse_pos < tokens.Size ()
+}
+
+parse (txt[] tokens) double {
+
+	parse_pos = 0
+
+	return parseExpression (tokens)
+}
+
+parseLiteral (txt[] tokens) double  {
+	if parse_peek (tokens).cmp@std ("(") {
+		parse_advance (tokens)
+		expr = parseExpression (tokens)
+		if !parse_peek (tokens).cmp@std (")") {
+			parse_advance (tokens)
+			return 0
+		} else parse_advance (tokens)
+		return expr
+	} else if parse_peek (tokens).cmp@std ("+") {
+		// Uni plus operator
+		parse_advance (tokens)
+		return parseLiteral (tokens)
+	} else if parse_peek (tokens).cmp@std ("-") {
+		// Uni min. operator
+		parse_advance (tokens)
+		return -parseLiteral (tokens)
+	}
+	return parse_advance (tokens) as double
+}
+
+parseTerm (txt[] tokens) double {
+	a = parseLiteral (tokens)
+	for parse_hasNext (tokens) {
+		if parse_peek (tokens).cmp@std ("*") {
+			parse_advance (tokens)
+			b = parseLiteral (tokens)
+			a = a * b
+		} else if parse_peek (tokens).cmp@std ("/") {
+			parse_advance (tokens)
+			b = parseLiteral (tokens)
+			a = a / b
+		} else {
+			return a
+		}
+	}
+	return a
+}
+
+parseExpression (txt[] tokens) double {
+	a = parseTerm (tokens)
+	for parse_hasNext (tokens) {
+		if parse_peek (tokens).cmp@std ("+") {
+			parse_advance (tokens)
+			b = parseTerm (tokens)
+			a = a + b
+		} else if parse_peek (tokens).cmp@std ("-") {
+			parse_advance (tokens)
+			b = parseTerm (tokens)
+			a = a - b
+		} else {
+			return a
+		}
+	}
+	return a
+}
+
+// Will form tokens from characters 2  + 3 => [2] [+] [3]
+tokenize (txt calculation) txt[] {
+	// This array will hold every single token and will be returned
+	tokens is txt[]
+
+	// Buffer for extracting the tokens
+	number = ""
+	operator = ""
+
+
+	// Looping through every character
+	i = 0
+	for i < calculation.Length () {
+
+		// Interator is character
+		character is ubyte = calculation.CharAt (i)
+
+		// If character matches an operator it will be stored tmp in operator
+		if character == "+".CharAt (0) {
+			// Plus sign
+			operator = "+"
+		} else if character == "-".CharAt (0) {
+			// Minus sign
+			operator = "-"
+		} else if character == "*".CharAt (0) {
+			// Mul sign
+			operator = "*"
+		} else if character == "/".CharAt (0) {
+			// Div sign
+			operator = "/"
+		} else if character == "(".CharAt (0) {
+			// Open Bracket
+			operator = "("
+		} else if character == ")".CharAt (0) {
+			// Closing Bracket
+			operator = ")"
+		} else if (character >= "0".CharAt (0) && character <= "9".CharAt (0)) || character == ".".CharAt (0) {
+			// Literal
+
+			// If it's a number, then add it to buffer 'number'
+			number = number + "".InsertChar (character)
+		}
+
+
+		// Adding the buffers
+		if number.Length () > 0 && operator.Length () > 0 {
+			tokens.Add (number)
+			number = ""
+		}
+
+		if operator.Length () > 0 {
+			tokens.Add (operator)
+			operator = ""
+		}
+
+		i = i + 1
+	}
+
+	// if number is left, add it
+
+	if number.Length () != 0 {
+		tokens.Add (number)
+		number = ""
+	}
+
+	return tokens
+}
+
+
+

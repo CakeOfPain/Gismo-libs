@@ -1,0 +1,391 @@
+
+bytecode_name is txt[
+	"NOP",
+	"LOAD_CONST_NUM8",
+	"LOAD_CONST_NUM16",
+	"LOAD_CONST_NUM32",
+	"LOAD_CONST_NUM64",
+	
+	"LOAD_GLOBAL_NUM8",
+	"LOAD_GLOBAL_NUM16",
+	"LOAD_GLOBAL_NUM32",
+	"LOAD_GLOBAL_NUM64",
+	
+	"STORE_GLOBAL_NUM8",
+	"STORE_GLOBAL_NUM16",
+	"STORE_GLOBAL_NUM32",
+	"STORE_GLOBAL_NUM64",
+
+	"LOAD_STACK_NUM8",
+	"LOAD_STACK_NUM16",
+	"LOAD_STACK_NUM32",
+	"LOAD_STACK_NUM64",
+	
+	"STORE_STACK_NUM8",
+	"STORE_STACK_NUM16",
+	"STORE_STACK_NUM32",
+	"STORE_STACK_NUM64",
+
+	"ADD_I",
+	"ADD_U",
+	"ADD_F",
+	
+	"SUB_I",
+	"SUB_U",
+	"SUB_F",
+	
+	"MUL_I",
+	"MUL_U",
+	"MUL_F",
+	
+	"DIV_I",
+	"DIV_U",
+	"DIV_F",
+	
+	"AND",
+	"OR",
+	"NOT",
+	
+	"EQ_I",
+	"EQ_U",
+	"EQ_F",
+	
+	"EQ_IU",
+	"EQ_FI",
+	"EQ_FU",
+
+	"GREATER_I",
+	"GREATER_U",
+	"GREATER_F",
+	
+	"GREATER_IU",
+	"GREATER_FI",
+	"GREATER_FU",
+	
+	"LESS_I",
+	"LESS_U",
+	"LESS_F",
+	
+	"LESS_IU",
+	"LESS_FI",
+	"LESS_FU",
+	
+	
+	"LOAD_GLOBAL_COLLECTION",
+	"LOAD_STACK_COLLECTION",
+
+	"STORE_GLOBAL_COLLECTION",
+	"STORE_STACK_COLLECTION",
+	
+	"ADD_ELEMENT",
+	"REMOVE_ELEMENT",
+	"SIZEOF_COLLECTION",
+	"LOAD_ELEMENT",
+	"STORE_ELEMENT",
+	
+	"LOAD_CONST_FUNC",
+	"LOAD_GLOBAL_FUNC",
+	"LOAD_STACK_FUNC",
+	
+	"STORE_GLOBAL_FUNC",
+	"STORE_STACK_FUNC",
+	
+	"CALL_FUNC",
+	"RETURN_ELEMENT",
+	"POP",
+	"SWAP",
+	"ROT",
+	
+	"EXIT",
+	
+	"LOAD_CONST_TEXT",
+	"LOAD_GLOBAL_TEXT",
+	"LOAD_STACK_TEXT",
+	
+	"STORE_GLOBAL_TEXT",
+	"STORE_STACK_TEXT",
+	
+	"TEXT_ADD_CHAR",
+	"TEXT_REMOVE_CHAR",
+	"TEXT_POP_CHAR",
+	"TEXT_GETSIZE",
+	"TEXT_GET_CHAR",
+	
+	"COPY_COLLECTION",
+	"COPY_TEXT",
+	
+	"PRINT_I",
+	"PRINT_U",
+	"PRINT_F",
+	"PRINT_C",
+	"PRINT_TEXT",
+	"NEWLINE",
+
+	"COLLECTION2TEXT",
+	
+	
+	"GET_INSTANCE",
+	
+	"JUMP_ABS",
+	"JUMP_NEG",
+	"JUMP_POS",
+	"JUMP_IF_TRUE_ABS",
+	"JUMP_IF_FALSE_ABS",
+	"JUMP_IF_TRUE_NEG",
+	"JUMP_IF_FALSE_NEG",
+	"JUMP_IF_TRUE_POS",
+	"JUMP_IF_FALSE_POS",
+	
+	"MOD_I",
+	"MOD_U",
+	
+	"BUILD_EMPTYCOLLECTION",
+	"BUILD_COLLECTION",
+	"INPUT_I",
+	"INPUT_U",
+	"INPUT_F",
+	"INPUT_TEXT",
+	"INPUT_LINE",
+	
+	"TEXT_SET_CHAR",
+	"LOAD_ARGUMENT",
+	"I2U",
+	"I2F",
+	"U2I",
+	"U2F",
+	"F2I",
+	"F2U",
+
+	"IS_NUM",
+	"IS_TEXT",
+	"IS_COLLECTION",
+	"IS_FUNC",
+	"IS_NOTHING",
+	
+	"FLOAT2DOUBLE",
+	"DOUBLE2FLOAT",
+	
+	"BNOT",
+	"COLLECTION_INIT",
+	"TO_STRING_I",
+	"TO_STRING_F",
+	"TO_STRING_U",
+	"STR_TO_I",
+	"STR_TO_F",
+	"STR_TO_U",
+	
+	"UNARY_MINUS_I",
+	"UNARY_MINUS_F",
+	"CONCAT",
+	
+	"INPUT_CHAR",
+	"CALL_VANGUARD",
+	
+	"CLOCK",
+	"TIME",
+
+	"GNL_LOAD",
+	"GNL_SYMBOL",
+	"GNL_EXEC",
+	"GNL_CLOSE",
+	
+	"SETUP_ITER",
+	"NEXT_ITER",
+
+	"TEXT_HASH"
+]
+
+bytecode_arglength is int[
+	0,			//NOP
+	4,			//LOAD_CONST_NUM8
+	4,			//LOAD_CONST_NUM16
+	4,			//LOAD_CONST_NUM32
+	4,			//LOAD_CONST_NUM64
+	
+	4,			//LOAD_GLOBAL_NUM8
+	4,			//LOAD_GLOBAL_NUM16
+	4,			//LOAD_GLOBAL_NUM32
+	4,			//LOAD_GLOBAL_NUM64
+	
+	4,			//STORE_GLOBAL_NUM8
+	4,			//STORE_GLOBAL_NUM16
+	4,			//STORE_GLOBAL_NUM32
+	4,			//STORE_GLOBAL_NUM64
+
+	4,			//LOAD_STACK_NUM8	
+	4,			//LOAD_STACK_NUM16
+	4,			//LOAD_STACK_NUM32
+	4,			//LOAD_STACK_NUM64
+	
+	4,			//STORE_STACK_NUM8
+	4,			//STORE_STACK_NUM16
+	4,			//STORE_STACK_NUM32
+	4,			//STORE_STACK_NUM64
+
+	0,			//ADD_I
+	0,			//ADD_U
+	0,			//ADD_F
+	
+	0,			//SUB_I
+	0,			//SUB_U
+	0,			//SUB_F
+	
+	0,			//MUL_I
+	0,			//MUL_U
+	0,			//MUL_F
+	
+	0,			//DIV_I
+	0,			//DIV_U
+	0,			//DIV_F
+	
+	0,			//AND
+	0,			//OR
+	0,			//NOT
+	
+	0,			//EQ_I
+	0,			//EQ_U
+	0,			//EQ_F
+	
+	0,			//EQ_IU
+	0,			//EQ_FI
+	0,			//EQ_FU
+
+	
+	0,			//GREATER_I
+	0,			//GREATER_U
+	0,			//GREATER_F
+	
+	0,			//GREATER_IU
+	0,			//GREATER_FI
+	0,			//GREATER_FU
+	
+	0,			//SMALLER_I
+	0,			//SMALLER_U
+	0,			//SMALLER_F
+
+	0,			//SMALLER_IU
+	0,			//SMALLER_FI
+	0,			//SMALLER_FU
+	
+	4,			//LOAD_GLOBAL_COLLECTION
+	4,			//LOAD_STACK_COLLECTION
+
+	4,			//STORE_GLOBAL_COLLECTION
+	4,			//STORE_STACK_COLLECTION
+	
+	0,			//ADD_ELEMENT
+	0,			//REMOVE_ELEMENT
+	0,			//SIZEOF_COLLECTION
+	0,			//LOAD_ELEMENT
+	0,			//STORE_ELEMENT
+	
+	4,			//LOAD_CONST_FUNC
+	4,			//LOAD_GLOBAL_FUNC
+	4,			//LOAD_STACK_FUNC
+	
+	4,			//STORE_GLOBAL_FUNC
+	4,			//STORE_STACK_FUNC
+	
+	4,			//CALL_FUNC
+	0,			//RETURN_ELEMENT
+	0,			//POP
+	0,			//SWAP
+	0,			//ROT
+	
+	0,			//EXIT
+	
+	4,			//LOAD_CONST_TEXT
+	4,			//LOAD_GLOBAL_TEXT
+	4,			//LOAD_STACK_TEXT
+	
+	4,			//STORE_GLOBAL_TEXT
+	4,			//STORE_STACK_TEXT
+	
+	0,			//TEXT_ADD_CHAR
+	0,			//TEXT_REMOVE_CHAR
+	0,			//TEXT_POP_CHAR
+	0,			//TEXT_GETSIZE
+	0,			//TEXT_GET_CHAR
+	
+	0,			//COPY_COLLECTION
+	0,			//COPY_TEXT
+	
+	0,			//PRINT_I
+	0,			//PRINT_U
+	0,			//PRINT_F
+	0,			//PRINT_C
+	0,			//PRINT_TEXT
+	0,			//NEWLINE
+
+	0,			//COLLECTION2TEXT
+	
+	
+	0,			//GET_INSTANCE
+	
+	4,			//JUMP_ABS
+	2,			//JUMP_NEG
+	2,			//JUMP_POS
+	4,			
+	4,
+	2,
+	2,
+	2,
+	2,
+	
+	0,
+	0,
+	
+	0,
+	4,
+	0,
+	0,
+	0,
+	0,
+	0,
+	
+	0,
+	4,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+
+	0,
+	0,
+	0,
+	0,
+	0,
+	
+	0,
+	0,
+	
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	
+	0,
+	0,
+	0,
+	
+	0,
+	0,
+	
+	0,
+	0,
+
+	0,
+	0,
+	4,
+	0,
+
+	0,
+	0,
+	0
+]

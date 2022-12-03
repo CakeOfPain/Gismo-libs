@@ -1,0 +1,224 @@
+
+pi = 3.14159265359
+
+library_handle is ushort = GNL_LOAD("C:/Gismolang/GNL_files/cmath.dll")
+
+rand_handle is ushort = GNL_SYMBOL(library_handle, "cmath_rand")
+srand_handle is ushort = GNL_SYMBOL(library_handle, "cmath_srand")
+abs_handle is ushort = GNL_SYMBOL(library_handle, "cmath_abs")
+div_quot_handle is ushort = GNL_SYMBOL(library_handle, "cmath_div_quot")
+div_rem_handle is ushort = GNL_SYMBOL(library_handle, "cmath_div_rem")
+
+sin_handle is ushort = GNL_SYMBOL(library_handle, "cmath_sin")
+cos_handle is ushort = GNL_SYMBOL(library_handle, "cmath_cos")
+tan_handle is ushort = GNL_SYMBOL(library_handle, "cmath_tan")
+asin_handle is ushort = GNL_SYMBOL(library_handle, "cmath_asin")
+acos_handle is ushort = GNL_SYMBOL(library_handle, "cmath_acos")
+sinh_handle is ushort = GNL_SYMBOL(library_handle, "cmath_sinh")
+cosh_handle is ushort = GNL_SYMBOL(library_handle, "cmath_cosh")
+tanh_handle is ushort = GNL_SYMBOL(library_handle, "cmath_tanh")
+fmod_handle is ushort = GNL_SYMBOL(library_handle, "cmath_fmod")
+cosf_handle is ushort = GNL_SYMBOL(library_handle, "cmath_cosf")
+asinh_handle is ushort = GNL_SYMBOL(library_handle, "cmath_asinh")
+acosh_handle is ushort = GNL_SYMBOL(library_handle, "cmath_acosh")
+atanh_handle is ushort = GNL_SYMBOL(library_handle, "cmath_atanh")
+exp2_handle is ushort = GNL_SYMBOL(library_handle, "cmath_exp2")
+expm1_handle is ushort = GNL_SYMBOL(library_handle, "cmath_expm1")
+ilogb_handle is ushort = GNL_SYMBOL(library_handle, "cmath_ilogb")
+logb_handle is ushort = GNL_SYMBOL(library_handle, "cmath_logb")
+log1p_handle is ushort = GNL_SYMBOL(library_handle, "cmath_log1p")
+log2_handle is ushort = GNL_SYMBOL(library_handle, "cmath_log2")
+cbrt_handle is ushort = GNL_SYMBOL(library_handle, "cmath_cbrt")
+hypot_handle is ushort = GNL_SYMBOL(library_handle, "cmath_hypot")
+remainder_handle is ushort = GNL_SYMBOL(library_handle, "cmath_remainder")
+fdim_handle is ushort = GNL_SYMBOL(library_handle, "cmath_fdim")
+fmin_handle is ushort = GNL_SYMBOL(library_handle, "cmath_fmin")
+fmax_handle is ushort = GNL_SYMBOL(library_handle, "cmath_fmax")
+trunc_handle is ushort = GNL_SYMBOL(library_handle, "cmath_trunc")
+rint_handle is ushort = GNL_SYMBOL(library_handle, "cmath_rint")
+lrint_handle is ushort = GNL_SYMBOL(library_handle, "cmath_lrint")
+llrint_handle is ushort = GNL_SYMBOL(library_handle, "cmath_llrint")
+round_handle is ushort = GNL_SYMBOL(library_handle, "cmath_round")
+lround_handle is ushort = GNL_SYMBOL(library_handle, "cmath_lround")
+llround_handle is ushort = GNL_SYMBOL(library_handle, "cmath_llround")
+nearbyint_handle is ushort = GNL_SYMBOL(library_handle, "cmath_nearbyint")
+nextafter_handle is ushort = GNL_SYMBOL(library_handle, "cmath_nextafter")
+nexttoward_handle is ushort = GNL_SYMBOL(library_handle, "cmath_nexttoward")
+copysign_handle is ushort = GNL_SYMBOL(library_handle, "cmath_copysign")
+scalbn_handle is ushort = GNL_SYMBOL(library_handle, "cmath_scalbn")
+scalbln_handle is ushort = GNL_SYMBOL(library_handle, "cmath_scalbln")
+fma_handle is ushort = GNL_SYMBOL(library_handle, "cmath_fma")
+tgamma_handle is ushort = GNL_SYMBOL(library_handle, "cmath_tgamma")
+lgamma_handle is ushort = GNL_SYMBOL(library_handle, "cmath_lgamma")
+erf_handle is ushort = GNL_SYMBOL(library_handle, "cmath_erf")
+erfc_handle is ushort = GNL_SYMBOL(library_handle, "cmath_erfc")
+pow_handle is ushort = GNL_SYMBOL(library_handle, "cmath_pow")
+sqrt_handle is ushort = GNL_SYMBOL(library_handle, "cmath_sqrt")
+floor_handle is ushort = GNL_SYMBOL (library_handle, "cmath_floor")
+
+rand() long
+	return GNL_EXEC(library_handle, rand_handle, long)
+
+srand(ulong n)
+	GNL_EXEC(library_handle, srand_handle, 0, n)
+
+abs(long x) long
+	return GNL_EXEC(library_handle, abs_handle, long, x)
+
+div_quot(long x, long y) long
+	return GNL_EXEC(library_handle, div_quot_handle, long, x, y)
+
+div_rem(long x, long y) long
+	return GNL_EXEC(library_handle, div_rem_handle, long, x, y)
+
+sin(double x) double
+	return GNL_EXEC(library_handle, sin_handle, double, x)
+
+cos(double x) double
+	return GNL_EXEC(library_handle, cos_handle, double, x)
+
+tan(double x) double
+	return GNL_EXEC(library_handle, tan_handle, double, x)
+
+asin(double x) double
+	return GNL_EXEC(library_handle, asin_handle, double, x)
+
+acos(double x) double
+	return GNL_EXEC(library_handle, acos_handle, double, x)
+
+sinh(double x) double
+	return GNL_EXEC(library_handle, sinh_handle, double, x)
+
+cosh(double x) double
+	return GNL_EXEC(library_handle, cosh_handle, double, x)
+
+tanh(double x) double
+	return GNL_EXEC(library_handle, tanh_handle, double, x)
+
+fmod(double a, double b) double
+	return GNL_EXEC(library_handle, fmod_handle, double, a, b)
+
+cosf(double x) double
+	return GNL_EXEC(library_handle, cosf_handle, double, x)
+
+asinh(double x) double
+	return GNL_EXEC(library_handle, asinh_handle, double, x)
+
+acosh(double x) double
+	return GNL_EXEC(library_handle, acosh_handle, double, x)
+
+atanh(double x) double
+	return GNL_EXEC(library_handle, atanh_handle, double, x)
+
+exp2(double x) double
+	return GNL_EXEC(library_handle, exp2_handle, double, x)
+
+expm1(double x) double
+	return GNL_EXEC(library_handle, expm1_handle, double, x)
+
+ilogb(double x) long
+	return GNL_EXEC(library_handle, ilogb_handle, long, x)
+
+logb(double x) double
+	return GNL_EXEC(library_handle, logb_handle, double, x)
+
+log1p(double x) double
+	return GNL_EXEC(library_handle, log1p_handle, double, x)
+
+log2(double x) double
+	return GNL_EXEC(library_handle, log2_handle, double, x)
+
+cbrt(double x) double
+	return GNL_EXEC(library_handle, cbrt_handle, double, x)
+
+hypot(double x) double
+	return GNL_EXEC(library_handle, hypot_handle, double, x)
+
+remainder(double a, double b) double
+	return GNL_EXEC(library_handle, remainder_handle, double, a, b)
+
+fdim(double a, double b) double
+	return GNL_EXEC(library_handle, fdim_handle, double, a, b)
+
+fmin(double a, double b) double
+	return GNL_EXEC(library_handle, fmin_handle, double, a, b)
+
+fmax(double a, double b) double
+	return GNL_EXEC(library_handle, fmax_handle, double, a, b)
+
+trunc(double x) double
+	return GNL_EXEC(library_handle, trunc_handle, double, x)
+
+rint(double x) double
+	return GNL_EXEC(library_handle, rint_handle, double, x)
+
+lrint(double x) long
+	return GNL_EXEC(library_handle, lrint_handle, long, x)
+
+llrint(double x) long
+	return GNL_EXEC(library_handle, llrint_handle, long, x)
+
+round(double x) double
+	return GNL_EXEC(library_handle, round_handle, double, x)
+
+lround(double x) long
+	return GNL_EXEC(library_handle, lround_handle, long, x)
+
+llround(double x) long
+	return GNL_EXEC(library_handle, llround_handle, long, x)
+
+nearbyint(double x) double
+	return GNL_EXEC(library_handle, nearbyint_handle, double, x)
+
+nextafter(double a, double b) double
+	return GNL_EXEC(library_handle, nextafter_handle, double, a, b)
+
+nexttoward(double a, double b) double
+	return GNL_EXEC(library_handle, nexttoward_handle, double, a, b)
+
+copysign(double a, double b) double
+	return GNL_EXEC(library_handle, copysign_handle, double, a, b)
+
+scalbn(double a, int b) double
+	return GNL_EXEC(library_handle, scalbn_handle, double, a, b)
+
+scalbln(double a, long b) double
+	return GNL_EXEC(library_handle, scalbln_handle, double, a, b)
+
+fma(double a, double b, double c) double
+	return GNL_EXEC(library_handle, fma_handle, double, a, b, c)
+
+tgamma(double x) double
+	return GNL_EXEC(library_handle, tgamma_handle, double, x)
+
+lgamma(double x) double
+	return GNL_EXEC(library_handle, lgamma_handle, double, x)
+
+erf(double x) double
+	return GNL_EXEC(library_handle, erf_handle, double, x)
+
+erfc(double x) double
+	return GNL_EXEC(library_handle, erfc_handle, double, x)
+
+floor (double x) double
+	return GNL_EXEC(library_handle, floor_handle, double, x)
+
+trand() {
+	srand(time())
+}
+
+sqrt (double x) double
+	return GNL_EXEC (library_handle, sqrt_handle, double, x)
+
+pow (double a, double b) double
+	return GNL_EXEC (library_handle, pow_handle, double, a, b)
+
+tranded is ubyte = false
+
+random(long min, long max) long {
+	if !tranded {
+		tranded = true
+		trand()
+	}
+	return min + rand() % (max - min)
+}

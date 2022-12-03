@@ -1,0 +1,221 @@
+
+gvos_terminal_x = 0u
+gvos_terminal_y = 0u
+
+print(txt message) {
+    i = 0u
+    for i < message.Length() {
+        c = message.CharAt(i)
+        if c == (#"\n") {
+            mvCursor@term(gvos_terminal_x, gvos_terminal_y)
+            // dwSymbol@term(#" ")
+            gvos_terminal_x = 0u
+            gvos_terminal_y = gvos_terminal_y + 1u
+        } else if c == (#"\b") {
+            gvos_terminal_x -= 1u
+        } else if c == (#"\r") {
+            gvos_terminal_x = 0u
+        } else {
+            mvCursor@term(gvos_terminal_x, gvos_terminal_y)
+            dwSymbol@term(c)
+            gvos_terminal_x = gvos_terminal_x + 1u
+        }
+        i = i + 1u
+    }
+}
+
+println(txt message) {
+    print(message + "\n")
+}
+
+mvc(ulong x, ulong y) {
+    gvos_terminal_x = x
+    gvos_terminal_y = y
+}
+
+jc(long x, long y) {
+    gvos_terminal_x += x
+    gvos_terminal_y += y
+}
+
+mvcX(ulong x) {
+    gvos_terminal_x = x
+}
+
+clearScreen() {
+    mvCursor@term(0, 0)
+    clrDisp@term()
+}
+
+fixedUserInput(txt placeholder, ulong fixedSize, ubyte is_secret) txt {
+    buffer := ""
+    is_inputing := true
+    print(mulText@std(placeholder, fixedSize))
+    print(mulText@std("\b", fixedSize))
+    cursorChar := "".InsertChar(22)
+    for is_inputing {
+        character := 0u
+        for !character {
+            if (time() % 2) == 0 {
+                cursorChar = " "
+            } else {
+                cursorChar = "".InsertChar(22)
+            }
+            print(cursorChar + "\b")
+            character = cgchar@term()
+        }
+        if character == #"\n" {
+            is_inputing = false
+        } else if character == #"\b" {
+            if buffer.Length() != 0u {
+                if buffer.Length() < (fixedSize)
+                    print("\b" + placeholder + placeholder + "\b\b")
+                else
+                    print("\b"+ placeholder +" \b\b")
+                last = buffer.Length() - 1u
+                buffer = buffer.Remove(last)
+            }
+        } else {
+            if buffer.Length() < fixedSize {
+                if is_secret {
+                    print("*")
+                } else {
+                    print("".InsertChar(character))
+                }
+                buffer = buffer.InsertChar(character)
+            }
+        } 
+    }
+    if buffer.Length() < (fixedSize-1) {
+        print(placeholder)
+    } else {
+        print(" ")
+    }
+    print("\n")
+    return buffer
+}
+
+FixedUserInput2DCallback(
+    txt placerholder,
+    uint fixedSize,
+    uint fixedLines,
+    bool is_secret,
+    uint line,
+    txt[] buffer,
+    ubyte currentChar
+) bool = true
+
+fixedUserInput2DCallback := FixedUserInput2DCallback
+fixedUserInput2D(txt placeholder, uint fixedSize, uint fixedLines, bool is_secret) txt[] {
+    buffer is txt[""]
+    line = 0u
+    is_inputing := true
+    print(mulText@std(placeholder, fixedSize))
+    print(mulText@std("\b", fixedSize))
+    cursorChar := "".InsertChar(22)
+    for is_inputing {
+        character := 0u
+        for !character {
+            if (time() % 2) == 0 {
+                cursorChar = " "
+            } else {
+                cursorChar = "".InsertChar(22)
+            }
+            print(cursorChar + "\b")
+            character = cgchar@term()
+        }
+        if !fixedUserInput2DCallback(
+            placeholder,
+            fixedSize,
+            fixedLines,
+            is_secret,
+            line,
+            buffer,
+            character
+        ) {
+            is_inputing = false
+        } else if character == #"\n" {
+            for i = 0u; i < (1 + (fixedSize - buffer[line].Length())); i +=1u {
+                print(" ")
+            }
+            jc(-((fixedSize + 1u) as int), 1)
+            line += 1u
+            if line >= fixedLines
+                is_inputing = false
+            else if line <= buffer.Size() {
+                buffer.Add("")
+                print(mulText@std(placeholder, fixedSize))
+                print(mulText@std("\b", fixedSize))
+            }
+        } else if character == #"\b" {
+            if buffer[line].Length() != 0u {
+                if buffer[line].Length() < (fixedSize)
+                    print("\b" + placeholder + placeholder + "\b\b")
+                else
+                    print("\b"+ placeholder +" \b\b")
+                last = buffer[line].Length() - 1u
+                buffer[line] = buffer[line].Remove(last)
+            } else {
+                if line != 0 {
+                    print(" \b")
+                    line -= 1u
+                    jc(buffer[line].Length(), -1)
+                }
+            }
+        } else if character == '\t' {
+            if (buffer[line].Length()+1) < fixedSize {
+                if is_secret {
+                    print("*")
+                } else {
+                    print("  ")
+                }
+                buffer[line] = buffer[line] + "  "
+            }
+        } else {
+            if buffer[line].Length() < fixedSize {
+                if is_secret {
+                    print("*")
+                } else {
+                    print("".InsertChar(character))
+                }
+                buffer[line] = buffer[line].InsertChar(character)
+            }
+        } 
+    }
+    if buffer[line].Length() < (fixedSize-1) {
+        print(placeholder)
+    } else {
+        print(" ")
+    }
+    print("\n")
+
+    buffer_full := ""
+    for i = 0u; i < buffer.Size(); i+=1u
+        buffer_full += buffer[i]
+
+
+    fixedUserInput2DCallback = FixedUserInput2DCallback
+    return buffer_full
+}
+
+lineOf(ulong len, txt character) txt {
+    characters := ""
+    i = 0u
+    for i < len {
+        characters = characters.InsertChar(#character)
+        i = i + 1u
+    }
+    return characters
+}
+
+asciiSymbol(uint x, uint y) txt {
+    return "".InsertChar(x + (y * 32))
+}
+
+fillRect(ubyte c, uint width, uint height) {
+    for y = 0u; y < height; y += 1u {
+        print(lineOf(width, "".InsertChar(c)))
+        jc(-(width as int), 1)
+    }
+    jc(0, -(height as int))
+}

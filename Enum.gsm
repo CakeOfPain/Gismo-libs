@@ -1,0 +1,22 @@
+counter is ulong = 0u
+defaultCountFunction(ulong x) ulong = x
+CountFunction(ulong x) ulong;
+countFunction := CountFunction
+
+custom(CountFunction cf) ulong {
+    counter = 1
+    countFunction = cf
+    return countFunction(0)
+}
+
+init() ulong {
+    counter = 1
+    countFunction = defaultCountFunction
+    return countFunction(0)
+}
+
+next() ulong {
+    next_count := counter
+    counter += 1
+    return countFunction(next_count)
+}

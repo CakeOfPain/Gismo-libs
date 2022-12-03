@@ -1,0 +1,177 @@
+dumpMemoryUse() txt = fmt(
+	"Memory used: \n",
+	"\tuint[",heap_uint.Size(),"] = ",heap_uint.Size() * 8," bytes \n",
+	"\tint[",heap_int.Size(),"] = ",heap_int.Size() * 8," bytes \n",
+	"\tfloat[",heap_float.Size(),"] = ",heap_float.Size() * 8," bytes \n",
+	"\ttxt[",heap_text.Size(),"] = ",{
+		txtsize = 0
+
+		for i = 0; i < heap_text.Size(); i+=1
+			txtsize += heap_text[i].Length()
+
+		txtsize
+	}," bytes \n",
+	"\tObject[",Object_head.Size(),"] = ",{
+		objsize = 8
+		
+		for i = 0; i < Object_head.Size(); i+=1 {
+			objsize += Object_className[i].Length()
+		}
+		objsize
+	}," bytes \n",
+	"\tObjNode[",ObjectNode_name.Size(),"] = ",{
+		nodesize = 16
+
+		for i=0; i < ObjectNode_name.Size(); i+=1 {
+			nodesize += ObjectNode_name[i].Length()
+		}
+		nodesize
+	}," bytes \n"
+)
+
+heap_uint       is ulong[0u];
+
+UInt(ulong value) Ref {
+	self := heap_uint.Size();
+	heap_uint.Add(value);
+	return self;
+}
+
+getUInt(Ref self) ulong {
+	return heap_uint[self]
+}
+
+updateUInt(Ref self, ulong value) {
+	heap_uint[self] = value
+}
+
+heap_int        is long[0];
+
+Int(long value) Ref {
+	self := heap_int.Size ();
+	heap_int.Add(value);
+	return self;
+}
+
+getInt(Ref self) long {
+	return heap_int[self]
+}
+
+updateInt(Ref self, long value) {
+	heap_int[self] = value
+} 
+
+heap_float     is double[0.0];
+
+Float(double value) Ref {
+	self := heap_float.Size();
+	heap_float.Add(value);
+	return self;
+}
+
+getFloat(Ref self) double {
+	return heap_float[self]
+}
+
+updateFloat(Ref self, double value) {
+	heap_float[self] = value
+}
+
+heap_text is txt["[NIL]"]
+
+Text(txt value) Ref {
+	self := heap_text.Size();
+	heap_text.Add(value);
+	return self;
+}
+
+getText(Ref self) txt {
+	return heap_text[self]
+}
+
+updateText(Ref self, txt value) {
+	heap_text[self] = value
+}
+
+ObjectNode_next is Ref[0u];
+ObjectNode_name is txt[""];
+ObjectNode_value is Ref[0u];
+
+ObjectNode(Ref next, txt name, Ref value) Ref {
+	self := ObjectNode_next.Size ();
+	ObjectNode_next.Add(next);
+	ObjectNode_name.Add(name);
+	ObjectNode_value.Add(value);
+	
+	return self;
+}
+
+Object_className is txt[""];
+Object_head is Ref[0u];
+
+Object(txt className) Ref {
+	self := Object_className.Size ();
+	Object_className.Add(className);
+	Object_head.Add(nil);
+	return self;
+}
+
+classOfObject(Ref object) txt {
+	return Object_className[object]
+}
+
+objectToText(Ref object) txt {
+	return fmt("{", object.classOfObject(), "}")
+}
+
+putField(Ref object, txt fieldname, Ref value) ubyte {
+	if (object == nil) return false;
+
+	new_object_node := ObjectNode(nil, fieldname, value);
+
+	objnode := Object_head[object];
+
+	if (objnode == nil) {
+		Object_head[object] = new_object_node;
+		return true;
+	}
+
+	for (ObjectNode_next[objnode] != nil && !ObjectNode_name[objnode].cmp@std(fieldname)) {
+		objnode = ObjectNode_next[objnode];
+	}
+
+	if (ObjectNode_name[objnode].cmp@std(fieldname)) {
+		ObjectNode_value[objnode] = value;
+	} else {
+		ObjectNode_next[objnode] = new_object_node;
+	}
+
+	return true;
+}
+
+getField(Ref object, txt name) Ref {
+	if (object == nil) return nil;
+
+	objnode := Object_head[object];
+
+	if (objnode != nil && ObjectNode_name[objnode].cmp@std(name))
+		return ObjectNode_value[objnode];
+	
+	for (ObjectNode_next[objnode] != nil && !ObjectNode_name[objnode].cmp@std(name)) {
+		objnode = ObjectNode_next[objnode];
+	}
+
+	if (!ObjectNode_name[objnode].cmp@std(name)) return nil;
+
+	return ObjectNode_value[objnode];
+}
+
+collectByClass(txt name) Ref[] {
+	objects is Ref[]
+	for i=0; i < Object_className.Size(); i+=1 {
+		objectName := Object_className[i]
+		if objectName.cmp@std(name)
+			objects.Add(i)
+	}
+	return objects
+}

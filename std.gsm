@@ -1,0 +1,746 @@
+type_undefined  := 0
+type_none       := 1
+type_ubyte      := 2
+type_byte       := 3
+type_ushort     := 4
+type_short      := 5
+type_uint       := 6
+type_int        := 7
+type_float      := 8
+type_ulong      := 9
+type_long       := 10
+type_double     := 11
+type_text       := 12
+type_function   := 13
+type_Collection := 14
+type_complex    := 15
+type_any        := 16
+
+types is txt[
+	"undefined",
+	"none",
+	"ubyte",
+	"byte",
+	"ushort",
+	"short",
+	"uint",
+	"int",
+	"float",
+	"ulong",
+	"long",
+	"double",
+	"text",
+	"function",
+	"Collection",
+	"complex",
+	"any"
+]
+
+getFormatType(Ref t) Ref {
+	if t == type_ubyte return type_ulong
+	else if t == type_ushort return type_ulong
+	else if t == type_uint return type_ulong
+	else if t == type_byte return type_long
+	else if t == type_short return type_long
+	else if t == type_int return type_long
+	else if t == type_float return type_double
+	return t
+}
+
+endln = "\n"
+
+cmp(txt a, txt b) ubyte {
+	if a.Length() != b.Length()
+		return false
+	i is uint = 0
+	for i < a.Length() {
+		if a.CharAt(i) != b.CharAt(i)
+			return false
+		i = i + 1
+	}
+	return true
+}
+
+same(txt a, txt b) ubyte {
+	a = upper(a)
+	b = upper(b)
+	if a.Length() != b.Length()
+		return false
+	i is uint = 0
+	for i < a.Length() {
+		if a.CharAt(i) != b.CharAt(i)
+			return false
+		i = i + 1
+	}
+	return true
+}
+
+upper(txt text) txt {
+	new = ""
+	for text.Length() {
+		ascii = text.CharAt(0)
+		if ascii > 96 && ascii < 123 {
+			ascii = ascii - 32
+		}
+		new = new.InsertChar(ascii)
+		text = text.Remove(0)
+	}
+	return new
+}
+
+reverse(txt text) txt {
+	new = ""
+	for text.Length() {
+		new = new.InsertChar(text.CharAt(text.Length()-1))
+		text = text.Remove(text.Length()-1)
+	}
+	return new
+}
+
+// // Deprecated!
+// ch(txt text) ubyte {
+// 	if text.Length() == 0 return 0
+// 	else return text.CharAt(0)
+// }
+
+pause(txt message) {
+	message.Print()
+	getch()
+	endln.Print()
+}
+
+argsCheck(txt[] args, uint min, uint max) {
+	size is uint = args.Size()
+	if size < min {
+		jErr("Too few arguments . . .")
+	} else if size > max {
+		jErr("Too many arguments . . .")
+	}
+	// Everything is ok . . .
+}
+
+colorCodeBlack    := 0u
+colorCodeRed      := 1u
+colorCodeGreen    := 2u
+colorCodeYellow   := 3u
+colorCodeBlue	  := 4u
+colorCodeMagenta  := 5u
+colorCodeCyan     := 6u
+colorCodeWhite    := 8u
+
+colorCodeReset    := 16u
+
+jErr(txt message) {
+	outerr(message)
+
+	exit(1)
+}
+
+logWarning(txt warning) {
+	fontColor@os(colorCodeYellow)
+	output(warning)
+	
+	fontColor@os(colorCodeReset)
+}
+
+abort(txt message) {
+	jErr(message)
+}
+
+assert(ubyte condition, txt message) {
+	if condition abort(message)
+}
+
+progressbar(txt message, double progress, double finishline, long numberOfBlocks) {
+	procent = progress / finishline
+	blocks is long = procent * numberOfBlocks
+	
+	i = 0u
+	for i < (numberOfBlocks + 2 + message.Length()) {
+		"\r \r".Print()
+		i = i + 1u
+	}
+	i = 0u
+	message.Print()
+	"[".Print()
+	for i < blocks {
+		"#".Print()
+		i = i + 1u	
+	}
+	for i < numberOfBlocks {
+		" ".Print()
+		i = i + 1u	
+	}
+	"]".Print()
+}
+
+fill(txt value, long len) txt = fillWith(" ", value, len)
+
+fillWith(txt fill_value, txt value, long len) txt {
+	if len < 0 {
+		len = len * (-1)
+		if value.Length() < (len+1u) {
+			i = value.Length()
+			for i < (len+1u) {
+				value = value + fill_value
+				i = i + 1u
+			}
+		}
+	} else {
+		if value.Length() < (len+1u) {
+			i = value.Length()
+			for i < (len+1u) {
+				value = fill_value + value
+				i = i + 1u
+			}
+		}
+	}
+	return value
+}
+
+indexOfTxtInList(txt[] list, txt value) long {
+	i = 0u
+	for i < list.Size() {
+		if cmp(list[i], value) return i
+		i = i + 1
+	}
+	return -1
+}
+
+indexOfSameTxtInList(txt[] list, txt value) long {
+	i = 0u
+	for i < list.Size() {
+		if same(list[i], value) return i
+		i = i + 1
+	}
+	return -1
+}
+
+split(txt message, txt character) txt[] {
+	elements is txt[]
+	element = ""
+	i = 0
+	for i < message.Length() {
+		if message.CharAt(i) == character.CharAt(0) {
+			elements.Add(element)
+			element = ""
+		} else {
+			element = element.InsertChar(message.CharAt(i))
+		}
+		i = i + 1
+	}
+	elements.Add(element)
+	return elements
+}
+
+toBytes(txt string) ubyte[] {
+	bytes is ubyte[]
+	i = 0
+	for i < string.Length()	{
+		bytes.Add(string.CharAt(i))
+		i = i + 1
+	}
+	return bytes
+}
+
+ccolor(short c) txt {
+	fontColor@os(c)
+	return ""
+}
+
+// HINT: Prefer these function over using isInText with one of the sets
+isUpper(ubyte ch) bool = ch >= 'A' && ch <= 'Z'
+isLower(ubyte ch) bool = ch >= 'a' && ch <= 'z'
+isNumeric(ubyte ch) bool = ch >= '0' && ch <= '9'
+isAlpha(ubyte ch) bool = isUpper(ch) || isLower(ch)
+isAlphaNumeric(ubyte ch) bool = isAlpha(ch) || isNumeric(ch)
+isWhitespace(ubyte ch) bool = ch.isInText(whitespace)
+
+// HINT: Use these if one of the functions above is not containing one
+// of these character sets, or composite ones
+whitespace := " \n\t"
+nummeric   := "1234567890"
+alphaUpper := "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+alphaLower := "abcdefghijklmnopqrstuvwxyz"
+alpha      := alphaUpper + alphaLower
+
+isInText(ubyte character, txt string) ubyte {
+	i = 0
+	for i < string.Length() {
+		if character == string.CharAt(i)
+			return true
+		i = i + 1
+	}
+	return false
+}
+
+filter(txt string, txt characters) txt {
+	newString = ""
+	i = 0
+	for i < string.Length() {
+		c = string.CharAt(i)
+		if !(c.isInText(characters)) {
+			newString = newString.InsertChar(c)
+		}
+		i = i + 1
+	}
+	return newString
+}
+
+insertText(txt base, txt insertion, ulong pos) txt {
+	product = ""
+	i = 0u
+	for i <= pos && i < base.Length() {
+		product = product.InsertChar(base.CharAt(i))
+		i = i + 1u
+	}
+	j = 0u
+	for j < insertion.Length() {
+		product = product.InsertChar(insertion.CharAt(j))
+		j = j + 1u
+	}
+
+	for i < base.Length() {
+		product = product.InsertChar(base.CharAt(i))
+		i = i + 1u
+	}
+	return product
+}
+
+subText(txt text, ulong start, ulong end) txt {
+	buffer = ""
+	i = start
+	for i < text.Length() && i < end {
+		buffer = buffer.InsertChar(text.CharAt(i))
+		i = i + 1u
+	}
+	return buffer
+}
+
+StringRepresentation(txt string) txt {
+	format = "\""
+	i = 0u
+	for i < string.Length() {
+
+		if string.CharAt(i) == (#"\"") format = format + ("\\\"")
+		else if string.CharAt(i) == (#"\\") format = format + ("\\\\")
+		else if string.CharAt(i) == (#"\n") format = format + ("\\n")
+		else if string.CharAt(i) == (#"\t") format = format + ("\\t")
+		else if string.CharAt(i) == (#"\a") format = format + ("\\a")
+		else if string.CharAt(i) == (#"\r") format = format + ("\\r")
+		else if string.CharAt(i) == (#"\b") format = format + ("\\b")
+		else if string.CharAt(i) < 32 format = format + ("\\" + fillWith("0", (string.CharAt(i)) as txt, 2))
+		else format = format.InsertChar(string.CharAt(i))
+
+		i = i + 1u
+	}
+	return format + "\""
+}
+
+SQLStringRepresentation(txt string) txt {
+	format = "\""
+	i = 0u
+	for i < string.Length() {
+
+		if string.CharAt(i) == (#"\"") format = format + ("\"\"")
+		else format = format.InsertChar(string.CharAt(i))
+
+		i = i + 1u
+	}
+	return format + "\""
+}
+
+getChar(txt text, ulong index) ubyte {
+	if index < text.Length() return text.CharAt(index)
+	return (#"\0")
+}
+
+tuple(*) txt {
+    args is $$args$$()
+    argt is $$argt$$()
+
+	tuple_buffer = ""
+
+    i = 0u
+    for i < args.Size() {
+
+        if(argt[i] == type_text) {
+            tuple_buffer = tuple_buffer + TupleElement(args[i] as txt)
+        } else if(argt[i] == type_ulong) {
+            tuple_buffer = tuple_buffer + TupleElement((args[i]) as ulong)
+        } else if(argt[i] == type_long) {
+            tuple_buffer = tuple_buffer + TupleElement(args[i] as long)
+        } else if(argt[i] == type_double) {
+            tuple_buffer = tuple_buffer + TupleElement(args[i] as double)
+        }
+
+        i = i + 1u
+    }
+
+
+    return "".writeUInt(i) + tuple_buffer
+}
+
+flatAppend(*) txt {
+	argt is $$argt$$()
+	args is $$args$$()
+	if args.Size() < 2 abort("Too few Arguments for flattAppend, need: (tuple, element)")
+
+	if argt[0u] != type_text abort("Unvalid Argument-Types for flattAppend, need: (tuple: txt, element: any)")
+	tp := args[0u] as txt
+
+	length := tp.Index()
+	tuple_buffer := ""
+
+	for i = 0u; i < length; i += 1u {
+		element_type = tp.$t(i)
+		if element_type == type_text {
+			tuple_buffer += TupleElement(tp.$a(i))
+		} else if element_type == type_ulong {
+			tuple_buffer += TupleElement(tp.$u(i))
+		} else if element_type == type_long {
+			tuple_buffer += TupleElement(tp.$i(i))
+		} else if element_type == type_double{
+			tuple_buffer += TupleElement(tp.$f(i))
+		}
+	}
+
+	tuple_body := "".writeUInt(length+1) + tuple_buffer
+	element_type = argt[1u]
+	if element_type == type_text {
+		return tuple_body + TupleElement(args[1u] as txt)
+	} else if element_type == type_ulong {	
+		return tuple_body + TupleElement(args[1u] as ulong)
+	} else if element_type == type_long {
+		return tuple_body + TupleElement(args[1u] as long)
+	} else if element_type == type_double {
+		return tuple_body + TupleElement(args[1u] as double)
+	} else {
+		abort("Element of unknown type")
+	}
+}
+
+TupleElement(*) txt {
+	args is $$args$$()
+    argt is $$argt$$()
+
+	if args.Size() < 1 {
+		return ""
+	}
+
+	if(argt[0u] == type_text) {
+		text := (args[0u]) as txt
+		buffer = "".writeByte(type_text).writeUInt(text.Length())
+
+		for i = 0u; i < text.Length(); i += 1u {
+			buffer = buffer.writeByte(text.CharAt(i))
+		}
+
+		return buffer
+	} else if(argt[0u] == type_ulong) {
+		return "".writeByte(type_ulong).writeULong(args[0u] as ulong)
+	} else if(argt[0u] == type_long) {
+		return "".writeByte(type_long).writeULong(args[0u] as ulong)
+	} else if(argt[0u] == type_double) {
+		return "".writeByte(type_double).writeULong(args[0u] as ulong)
+	}
+
+	return ""
+}
+
+writeByte(txt byteWriter, ubyte value) txt {
+	return byteWriter.InsertChar(value)
+}
+
+writeUShort(txt byteWriter, ulong value) txt {
+	byteWriter = byteWriter.writeByte((value.shR@os(8*1)) & 255u)
+	byteWriter = byteWriter.writeByte((value.shR@os(8*0)) & 255u)
+	return byteWriter
+}
+
+writeUInt(txt byteWriter, ulong value) txt {
+	byteWriter = byteWriter.writeByte((value.shR@os(8*3)) & 255u)
+	byteWriter = byteWriter.writeByte((value.shR@os(8*2)) & 255u)
+	byteWriter = byteWriter.writeByte((value.shR@os(8*1)) & 255u)
+	byteWriter = byteWriter.writeByte((value.shR@os(8*0)) & 255u)
+	return byteWriter
+}
+
+writeULong(txt byteWriter, ulong value) txt {
+	byteWriter = byteWriter.writeByte((value.shR@os(8*7)) & 255u)
+	byteWriter = byteWriter.writeByte((value.shR@os(8*6)) & 255u)
+	byteWriter = byteWriter.writeByte((value.shR@os(8*5)) & 255u)
+	byteWriter = byteWriter.writeByte((value.shR@os(8*4)) & 255u)
+	byteWriter = byteWriter.writeByte((value.shR@os(8*3)) & 255u)
+	byteWriter = byteWriter.writeByte((value.shR@os(8*2)) & 255u)
+	byteWriter = byteWriter.writeByte((value.shR@os(8*1)) & 255u)
+	byteWriter = byteWriter.writeByte((value.shR@os(8*0)) & 255u)
+	return byteWriter
+}
+
+$$Element(txt tp, ulong index) txt {
+	current_index = 0u
+	for i = 4u; i < tp.Length(); current_index += 1u {
+		element_type := tp.CharAt(i)
+		if element_type == type_ulong || element_type == type_long || element_type == type_double {
+			buffer = "".InsertChar(element_type)
+			i += 1u
+			for j = 0u; j < 8u && i < tp.Length(); j += 1u {
+				
+				buffer = buffer.InsertChar(tp.CharAt(i))
+
+				i += 1u
+			}
+
+			if current_index == index {
+				return buffer
+			}
+
+		} else if element_type == type_text {
+			// Adding the type
+			buffer = "".InsertChar(element_type)
+			
+			// Get next character
+			i += 1u
+
+			// Read the length of the string
+			size := formUInt@os(
+				tp.CharAt(i), tp.CharAt(i + 1u),
+				tp.CharAt(i + 2u), tp.CharAt(i + 3u)
+			)
+
+			buffer = buffer.writeUInt(size)
+
+			// Get next character
+			i += 4u
+
+			for j = 0u; j < size; j += 1u {
+				
+				buffer = buffer.InsertChar(tp.CharAt(i))
+				i += 1u 
+			}
+
+			if current_index == index {
+				return buffer
+			}
+		} else {
+			return "".writeByte(type_none)
+		}
+	}
+	
+	return "".writeByte(type_none)
+}
+
+$u(txt tp, ulong index) ulong {
+	element = tp.$$Element(index)
+	element_type := element.CharAt(0u)
+	if element_type == type_none jErr("Tuple Error: Out of Bounds!")
+	if element_type != type_ulong jErr("Tuple Error: Wrong type access!")
+
+	return formULong@os(
+		element.CharAt(1u), element.CharAt(2u),
+		element.CharAt(3u), element.CharAt(4u),
+		element.CharAt(5u), element.CharAt(6u),
+		element.CharAt(7u), element.CharAt(8u)
+	)
+}
+
+$i(txt tp, ulong index) long {
+	element = tp.$$Element(index)
+	element_type := element.CharAt(0u)
+	if element_type == type_none jErr("Tuple Error: Out of Bounds!")
+	if element_type != type_long jErr("Tuple Error: Wrong type access!")
+
+	return bytesToInt(formULong@os(
+		element.CharAt(1u), element.CharAt(2u),
+		element.CharAt(3u), element.CharAt(4u),
+		element.CharAt(5u), element.CharAt(6u),
+		element.CharAt(7u), element.CharAt(8u)
+	))
+}
+
+$f(txt tp, ulong index) double {
+	element = tp.$$Element(index)
+	element_type := element.CharAt(0u)
+	if element_type == type_none jErr("Tuple Error: Out of Bounds!")
+	if element_type != type_double jErr("Tuple Error: Wrong type access!")
+
+	return bytesToFloat(formULong@os(
+		element.CharAt(1u), element.CharAt(2u),
+		element.CharAt(3u), element.CharAt(4u),
+		element.CharAt(5u), element.CharAt(6u),
+		element.CharAt(7u), element.CharAt(8u)
+	))
+}
+
+$a(txt tp, ulong index) txt {
+	element = tp.$$Element(index)
+	element_type := element.CharAt(0u)
+	if element_type == type_none jErr("Tuple Error: Out of Bounds!")
+	if element_type != type_text jErr("Tuple Error: Wrong type access!")
+
+	size := formUInt@os(
+		element.CharAt(1u), element.CharAt(2u),
+		element.CharAt(3u), element.CharAt(4u)
+	)
+
+	buffer = ""
+
+	for i = 0u; i < size; i += 1u {
+		buffer = buffer.InsertChar(element.CharAt(5u + i))
+	}
+
+	return buffer
+}
+
+$t(txt tp, ulong index) ubyte {
+	element = tp.$$Element(index)
+	element_type := element.CharAt(0u)
+	return element_type
+}
+
+bytesToInt(*) long {
+	args is $$args$$()
+    argt is $$argt$$()
+
+	if args.Size() < 1 return 0
+
+	return args[0u] as long
+}
+
+bytesToFloat(*) double {
+	args is $$args$$()
+    argt is $$argt$$()
+
+	if args.Size() < 1 return 0.0
+
+	return args[0u] as double
+}
+
+Index(txt tp) uint {
+	return formUInt@os(tp.getChar(0u), tp.getChar(1u), tp.getChar(2u), tp.getChar(3u))
+}
+
+IsEmpty(txt tp) ubyte {
+	if (#tp) == 0u return true
+	return tp.Index() == 0u
+}
+
+NonEmpty(txt tp) ubyte {
+	return !IsEmpty(tp)
+}
+
+none := tuple()
+
+TupleRepresentation(txt tp) txt {
+	buffer = "("
+
+	length := tp.Index()
+
+	for i = 0u; i < length; i += 1u {
+		element_type := tp.$t(i)
+		if element_type == type_text {
+			buffer = buffer + tp.$a(i) .StringRepresentation()
+		} else if element_type == type_ulong {
+			buffer = buffer + (tp.$u(i)) as txt
+		} else if element_type == type_long {
+			buffer = buffer + (tp.$i(i)) as txt
+		} else if element_type == type_double {
+			buffer = buffer + (tp.$f(i)) as txt
+		} else {
+			buffer = buffer + "none"
+		}
+
+		if i < (length-1u) {
+			buffer = buffer + ", "
+		}
+	}
+
+	return buffer + ")"
+}
+
+mulText(txt message, ulong times) txt {
+	s := ""
+	for i = 0; i < times; i += 1
+		s += message
+	return s
+}
+
+Str(*) txt {
+
+	myString := ""
+
+	args is $$args$$()
+	argt is $$argt$$()
+
+	for i = 0u; i < args.Size(); i += 1u {
+		if argt[i] != type_ulong && argt[i] != type_long abort("Wrong Datatype")
+		myString = myString.InsertChar(args[i] as ulong)
+	}
+
+	return myString
+}
+
+getIndexInText(txt text, ubyte character) long {
+	for i=0; i < text.Length(); i+=1
+		if text.CharAt(i) == character
+			return i
+	return -1
+}
+
+stripMargin(txt text) txt {
+	nText := ""
+	for i = 0u; i < text.Length(); i += 1u {
+		c := text.CharAt(i)
+		if c == '\n' {
+			for i < text.Length() && c != '|'; i += 1u {
+				c = text.CharAt(i)
+			}
+			i -= 1u
+		} else {
+			nText = nText.InsertChar(c)
+		}
+	}
+
+	return nText
+}
+
+makeString(txt[] strings, txt seperator) txt {
+	string := ""
+
+	for i = 0u; i < strings.Size(); i += 1u {
+		if (i+1) < strings.Size()
+			string += strings[i] + seperator
+		else
+			string += strings[i]
+	}
+
+	return string
+}
+
+replace(txt text, txt subtext, txt replacement) txt {
+	replacedText := ""
+
+	advance = 1
+	for i = 0; i < text.Length(); i+=advance {
+		if subtext.cmp(text.subText(i, i+subtext.Length())) {
+			replacedText += replacement
+			advance = subtext.Length()
+		} else {
+			replacedText = replacedText.InsertChar(text.CharAt(i))
+			advance = 1
+		}
+	}
+
+	return replacedText
+}
+
+countChar(txt text, ubyte char) int {
+	n = 0
+
+	for i = 0; i < text.Length(); i+=1
+		if text.CharAt(i) == char
+			n += 1
+
+	return n
+}

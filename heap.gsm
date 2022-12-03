@@ -1,0 +1,24 @@
+// Used for System purposes
+
+lib_handle is ushort = GNL_LOAD("C:/Gismolang/GNL_files/heap.dll")
+
+createHashTable_handle is ushort = GNL_SYMBOL(lib_handle, "createHashTable")
+destroyHashTable_handle is ushort = GNL_SYMBOL(lib_handle, "destroyHashTable")
+putValue_handle is ushort = GNL_SYMBOL(lib_handle, "putValue")
+getValue_handle is ushort = GNL_SYMBOL(lib_handle, "getValue")
+deleteValue_handle is ushort = GNL_SYMBOL(lib_handle, "deleteValue")
+clearHashTable_handle is ushort = GNL_SYMBOL(lib_handle, "clearHashTable")
+
+
+createHashTable(Ref size) Ref = GNL_EXEC(lib_handle, createHashTable_handle, Ref, size)
+destroyHashTable(Ref hashtable) {
+	GNL_EXEC(lib_handle, destroyHashTable_handle, 0, hashtable)
+}
+putValue(Ref hashtable, txt key, txt value) {
+	GNL_EXEC(lib_handle, putValue_handle, 0, hashtable, key, value)
+}
+getValue(Ref hashtable, txt key) txt = GNL_EXEC(lib_handle, getValue_handle, txt, hashtable, key)
+deleteValue(Ref hashtable, txt key) txt = GNL_EXEC(lib_handle, deleteValue_handle, txt, hashtable, key)
+clearHashTable(Ref hashtable, bool free_data) {
+	GNL_EXEC(lib_handle, clearHashTable_handle, 0, hashtable, free_data)
+}

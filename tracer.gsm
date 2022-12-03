@@ -1,0 +1,75 @@
+function_tracer_callStack_name is txt[]
+function_tracer_callStack_line is Ref[]
+
+MAX_FUNCTION_CALLS := 1000
+STACKOVERFLOWING := false
+
+function_tracer_enter(txt name, Ref line) bool {
+    if !STACKOVERFLOWING
+    if function_tracer_callStack_name.Size() > (MAX_FUNCTION_CALLS-1u) {
+        STACKOVERFLOWING = true
+        // Red Font
+        "\x[0;31m".Print()
+        output("Error = Too many function calls. Recursion calls?")
+        printStackTrace()
+        // Reset Font
+        "\x[0m".Print()
+        exit(1)
+    }
+    function_tracer_callStack_name.Add(name)
+    function_tracer_callStack_line.Add(line)
+
+    // space := ""
+    // for i=0; i<function_tracer_callStack_name.Size();i+=1
+    //     space += ". "
+    // output(space, name, ":", line)
+	return true
+}
+
+function_tracer_leave(txt name, Ref line) bool {
+    if 0u < function_tracer_callStack_name.Size() {
+        last := function_tracer_callStack_name.Size() - 1u
+        function_tracer_callStack_name.Remove(last)
+        function_tracer_callStack_line.Remove(last)
+    }
+	return true
+}
+
+printStackTrace() {
+    output()
+    output("----------------Traced-Functions----------------")
+
+    beforeLine is ulong = 0u
+    sameAsBefore := false
+    
+    if function_tracer_callStack_name.Size() == 0u {
+        output("If Functioncall Stack is empty, you might want to enable debbuging mode")
+        output("Use instead of 'run' and 'build' the prefix 'debug='")
+    } else {
+        
+        preLast := function_tracer_callStack_line.Size() - 1u
+        function_tracer_callStack_name.Remove(preLast)
+        function_tracer_callStack_line.Remove(preLast)
+
+        for i = 0u; function_tracer_callStack_name.Size(); i += 1u {
+            last := function_tracer_callStack_name.Size() - 1u
+            if function_tracer_callStack_line[last] == beforeLine {
+                if !sameAsBefore {
+                    output("...")
+                    sameAsBefore = true
+                }
+            } else {
+                sameAsBefore = false
+                output("#", i, " - Function Call At Line ", function_tracer_callStack_line[last], ": ", function_tracer_callStack_name[last])
+            }
+            beforeLine = function_tracer_callStack_line[last]
+            function_tracer_callStack_line.Remove(last)
+            function_tracer_callStack_name.Remove(last)
+        }
+    }
+    output("------------------------------------------------")
+}
+
+$$GVMErrorHandler$$() {
+    printStackTrace()
+}

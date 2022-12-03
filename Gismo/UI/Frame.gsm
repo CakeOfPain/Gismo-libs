@@ -1,0 +1,367 @@
+FrameStyle(
+	int xPos,
+	int yPos,
+	int maxXPos,
+	int nRow,
+	int xOffset,
+	int yOffset,
+
+	int nextElementID,
+	int selectedElementID,
+
+	int fontsize,
+	txt font,
+	Ref fonthandle,
+
+	// theming         examples:
+	txt themeColor1,// WHITE - background
+	txt themeColor2,// BLACK - foreground
+	txt themeColor3,// GRAY  - example: Button hover
+	txt themeColor4,// BLUE  - example: Button press 
+	txt themeColor5 // YELLOW- text marker
+) table;
+
+createFrameStyle() FrameStyle = FrameStyle(
+	0, // xPos
+	0, // yPos
+	0, // maxXPos
+	0, // nRow
+	10,// offset 
+	10, // offset
+
+	0, // nextElementID
+	0, // SelectedElementID
+
+	// Font
+	20,
+	"C:/Windows/Fonts/times.ttf",
+	nil,
+
+	// theming
+	"255,255,255,255", // themeColor1
+	"0,0,0,255",       // themeColor2
+	"100,100,100,255", // themeColor3
+	"0,0,255,255",     // themeColor4
+	"255,255,0,255"    // themeColor5
+)
+
+MouseIO(
+	int x,
+	int y,
+	int btn,
+	int tglbtn
+) table;
+
+KeyboardIO(
+	txt inputs
+) table;
+
+readInputs(Frame frame) txt {
+	io := frame.io
+	keyboard := io.keyboard
+	inputs := keyboard.inputs
+	keyboard.inputs = ""
+	return inputs
+}
+
+FrameIO(
+	MouseIO mouse,
+	KeyboardIO keyboard
+) table;
+
+PrivateFrame(
+	Ref winhandler
+) table;
+
+Frame(
+	PrivateFrame private,
+	FrameIO io,
+	FrameStyle style,
+	txt elements,
+	bool quit,
+	int width, int height,
+	bool resizable
+) table;
+
+GISMOUI_SDL_usecount is uint = 0
+
+createFrame(txt title, int width, int height) Frame {
+	if !GISMOUI_SDL_usecount
+		setup@SDL()
+	
+	GISMOUI_SDL_usecount += 1
+
+	winhandler := createWindow@SDL()
+
+	winhandler.setTitle@SDL(title)
+	winhandler.setSize@SDL(width, height)
+
+	Frame(
+		PrivateFrame(winhandler),
+		FrameIO(
+			MouseIO(0, 0, 3, 3),
+			KeyboardIO("")
+		),
+		createFrameStyle(),
+		"", false,
+		width, height,
+		false
+	)
+}
+
+setWidth(Frame frame, int width) {
+	private := frame.private
+	winhandler := private.winhandler
+	frame.width = width
+	winhandler.setSize@SDL(frame.width, frame.height)
+}
+
+setHeight(Frame frame, int height) {
+	private := frame.private
+	winhandler := private.winhandler
+	frame.height = height
+	winhandler.setSize@SDL(frame.width, frame.height)
+}
+
+resizableFrame(Frame frame, bool b) {
+	private := frame.private
+	winhandler := private.winhandler
+	winhandler.resizable@SDL(b)
+	frame.resizable = b
+}
+
+FrameContent(Frame frame, txt params);
+
+mainloop(Frame frame, FrameContent content, txt params) {
+	private := frame.private
+	winhandler := private.winhandler
+	io := frame.io
+	keyboard := io.keyboard
+	mouse := io.mouse
+	style := frame.style
+	showing := false
+
+	graphics := winhandler.createRenderer@SDL()
+
+	// SETUP FONTS
+	style.fonthandle = loadFont@SDL(style.font, style.fontsize)
+
+	for !frame.quit {
+		mouse.tglbtn = 3
+		event = true
+		isOtherEvent := false
+		for event {
+			event = winhandler.checkEvent@SDL()
+
+			if event == QUIT@SDL
+				frame.quit = true
+			else if event == TEXTINPUT@SDL {
+				keyboard.inputs += readTextInputEvent@SDL()
+			} else if event == MOUSEMOTION@SDL {
+				mouse.x = getMouseX@SDL()
+				mouse.y = getMouseY@SDL()
+			} else if event == MOUSEBUTTONDOWN@SDL {
+				mouse.btn = readMouseButtonDownEvent@SDL()
+			} else if event == MOUSEBUTTONUP@SDL {
+				mouse.tglbtn = readMouseButtonUpEvent@SDL()
+				mouse.btn = 3
+			} else if event != false && event != true {
+				isOtherEvent = true
+			}
+		}
+
+		if isOtherEvent
+			if frame.resizable {
+				frame.width = winhandler.getWidth@SDL()
+				frame.height = winhandler.getHeight@SDL()
+			}
+
+		content(frame, params)
+
+		frame.renderElements(graphics)
+
+		if !showing {
+			winhandler.center@SDL()
+			winhandler.show@SDL()
+			showing = true
+		}
+
+		// delay@SDL(7)
+	}
+
+	winhandler.hide@SDL()
+
+	if style.fonthandle destroyFont@SDL(style.fonthandle)
+	graphics.destroyRenderer@SDL()
+}
+
+renderElements(Frame frame, Ref graphics) {
+	private := frame.private
+	winhandler := private.winhandler
+
+	style := frame.style
+
+	
+	if style.fonthandle {
+		destroyFont@SDL(style.fonthandle)
+		style.fonthandle = nil
+	}
+	style.fonthandle = loadFont@SDL(style.font, style.fontsize)
+
+	bg is split@std(style.themeColor1, ",")
+	graphics.drawColor@SDL(
+		bg[0u] as int,
+		bg[1u] as int,
+		bg[2u] as int,
+		bg[3u] as int
+	)
+	graphics.clearRenderer@SDL()
+
+	elements is split@std(frame.elements, ";")
+
+	for i = 0u; i < elements.Size(); i += 1u {
+		element is split@std(elements[i], ",")
+		
+		tag := element[0u]
+
+		if tag.cmp@std("color") {
+			graphics.drawColor@SDL(
+				element[1u] as int,
+				element[2u] as int,
+				element[3u] as int,
+				element[4u] as int
+			)
+		} else if tag.cmp@std("fs") {
+			style.fontsize = element[1u] as int
+			if style.fonthandle destroyFont@SDL(style.fonthandle)
+			style.fonthandle = loadFont@SDL(style.font, style.fontsize)
+		} else if tag.cmp@std("fillRect") {
+			graphics.fillRect@SDL(
+				element[1u] as int,
+				element[2u] as int,
+				element[3u] as int,
+				element[4u] as int
+			)
+		} else if tag.cmp@std("rect") {
+			graphics.drawRect@SDL(
+				element[1u] as int,
+				element[2u] as int,
+				element[3u] as int,
+				element[4u] as int
+			)
+		} else if tag.cmp@std("line") {
+			graphics.drawLine@SDL(
+				element[1u] as int,
+				element[2u] as int,
+				element[3u] as int,
+				element[4u] as int
+			)
+		} else if tag.cmp@std("text") {
+			graphics.drawString@SDL(
+				style.fonthandle,
+				(element[1u] as txt).replace@std("&cma&", ",").replace@std("&smicln&", ";"),
+				element[2u] as double,
+				element[3u] as double
+			)
+		} else if tag.cmp@std("circle") {
+			graphics.fillCircle@SDL(
+				element[1u] as double,
+				element[2u] as double,
+				element[3u] as double
+			)
+		}
+	}
+
+	graphics.present@SDL()
+
+	// Reset
+	frame.elements = ""
+	style.xPos = 0
+	style.yPos = 0
+	style.nRow = 0
+	style.nextElementID = 0
+}
+
+getElementId(Frame frame) int {
+	style := frame.style
+	elementID := style.nextElementID
+	style.nextElementID += 1
+	return elementID
+}
+
+setSelected(Frame frame, int id) {
+	style := frame.style
+	style.selectedElementID = id
+}
+
+getSelected(Frame frame) int {
+	style := frame.style
+	return style.selectedElementID
+}
+
+fontscale(Frame frame, double fs) {
+	style := frame.style
+	style.fontsize = fs
+	if style.fonthandle {
+		destroyFont@SDL(style.fonthandle)
+		style.fonthandle = nil
+	}
+	style.fonthandle = loadFont@SDL(style.font, style.fontsize)
+	frame.elements += fmt("fs,", fs, ";")
+}
+
+pack(Frame frame, int w, int h) int[] {
+	style := frame.style
+
+	if (style.xPos+w+style.xOffset) > frame.width {
+		style.xPos = 0
+		style.yPos += style.yOffset + style.nRow
+		style.nRow = 0
+	}
+
+	x := style.xPos + style.xOffset
+	y := style.yPos + style.yOffset
+
+
+	if style.nRow < h
+		style.nRow = h		
+
+	style.xPos = x + w
+
+	
+	if style.maxXPos < style.xPos {
+		style.maxXPos = style.xPos
+	}
+
+	nPos is int[x, y]
+	return nPos
+}
+
+toMinSize(Frame frame) {
+	style := frame.style
+	xValue := style.maxXPos + style.xOffset
+	yValue := style.yPos + style.nRow + style.yOffset
+	if frame.width != xValue || frame.height != yValue {
+		frame.setWidth(xValue)
+		frame.setHeight(yValue)
+	}
+}
+
+endOfLine(Frame frame) {
+	style := frame.style
+	style.xPos = 0
+	style.yPos += style.yOffset + style.nRow
+	style.nRow = 0
+}
+
+destroyFrame(Frame frame) {
+	GISMOUI_SDL_usecount -= 1
+
+	private := frame.private
+	winhandler := private.winhandler
+
+	winhandler.destroyWindow@SDL()
+
+	if !GISMOUI_SDL_usecount
+		quit@SDL()
+}

@@ -1,0 +1,282 @@
+
+
+asciiSet is ulong [
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	35604928818740862u,
+	0u,
+	17592455532560u,
+	5140u,
+	22256860140544u,
+	4569914863286288u,
+	106190517709062u,
+	167557814551608u,
+	4112u,
+	17626613155856u,
+	8865351471112u,
+	361724917844u,
+	17662986948608u,
+	2269391999729664u,
+	1006632960u,
+	17592186044416u,
+	2216338399296u,
+	26544009520152u,
+	61641640122384u,
+	138556049736252u,
+	66254570275388u,
+	17661946893336u,
+	66255243313790u,
+	33127638434078u,
+	2216338399358u,
+	66255276753468u,
+	66247660290620u,
+	17592187092992u,
+	2269392000778240u,
+	105656297742336u,
+	541174136832u,
+	6701761168896u,
+	8796497781276u,
+	4036415114757422080u,
+	72852244273176u,
+	33131950121502u,
+	30932371317276u,
+	33131950383646u,
+	68178346377790u,
+	2207648711230u,
+	30933310841372u,
+	72852350845506u,
+	136408430809212u,
+	30932893442104u,
+	37460940296738u,
+	138547088720386u,
+	143497318024834u,
+	72990054827586u,
+	61865854256184u,
+	2207648719390u,
+	18076264363738168u,
+	39668790076444u,
+	61865514779704u,
+	17661175009534u,
+	66255277146690u,
+	26543506211457u,
+	143789776863874u,
+	72722790491202u,
+	17661176595586u,
+	// 26491764876354u,
+	138555780243582u,
+	30803572818972u,
+	70506452091906u,
+	30855314542620u,
+	5128u,
+	138538465099776u,
+	4104u,
+	101578061134848u,
+	64073433481730u,
+	61589901803520u,
+	101577091989568u,
+	65981405871104u,
+	8830923053056u,
+	2026668357698977792u,
+	39737643238404u,
+	17661175005200u,
+	1013327577333891088u,
+	57226482156548u,
+	26422773549064u,
+	72852751908864u,
+	75060131135488u,
+	66255276736512u,
+	144746592396247040u,
+	4629837041496752128u,
+	4416504856576u,
+	30924167460864u,
+	26422776956928u,
+	97187665281024u,
+	26544009510912u,
+	112538905804800u,
+	112253873553408u,
+	434615129171165184u,
+	66005329772544u,
+	61607213008952u,
+	4521260802379792u,
+	30855853510684u,
+	216023433216u,
+	139081753198206u
+]
+
+asciiSet_images is Ref[]
+
+setupAsciiSet (Ref renderer) {
+	i = 0u
+	for i < asciiSet.Size () {
+		image = renderer.emptyImage@sdl (8, 8)
+		renderer.drawTo@sdl (image)
+		renderer.drawColor@sdl (0, 0, 0, 0)
+		renderer.clearRenderer@sdl ()
+		renderer.drawColor@sdl (255, 255, 255, 255)
+		renderer.drawSymbol (0, 0, asciiSet[i], 1)
+		asciiSet_images.Add (image)
+		i = i + 1u
+	}
+	renderer.drawTo@sdl (0)
+}
+
+repaintAsciiSet (Ref renderer) {
+	translated_x = translation_x@sdl ()
+	translated_y = translation_y@sdl ()
+	translate@sdl (0, 0)
+	i = 0u
+	for i < asciiSet.Size () {
+		renderer.drawTo@sdl (asciiSet_images[i])
+		renderer.drawColor@sdl (0, 0, 0, 0)
+		renderer.clearRenderer@sdl ()
+		renderer.drawColor@sdl (255, 255, 255, 255)
+		renderer.drawSymbol (0, 0, asciiSet[i], 1)
+		i = i + 1u
+	}
+	renderer.drawTo@sdl (0)
+	translate@sdl (translated_x, translated_y)
+}
+
+clearAsciiSet () {
+	i = 0u
+	for i < asciiSet_images.Size () {
+		destroyImage@sdl (asciiSet_images[i])
+		i = i + 1u
+	}
+}
+
+drawSymbol (Ref renderer, long px, long py, ulong symbol, ulong bsize) {
+	y = 0u
+	for y < 8u {
+		x = 0u
+		for x < 8u {
+			if bitAt@os (symbol, x + (y * 8u)) {
+				renderer.fillRect@sdl ((x * bsize) + px, (y * bsize) + py, bsize, bsize)
+			}
+			x = x + 1u
+		}
+		y = y + 1u
+	}
+}
+
+font_size is float = 10
+
+drawText (Ref renderer, txt text, long px, long py) {
+	i = 0u
+	pos = 0
+	for i < text.Length () {
+		if text.CharAt (i) == (#"\n") {
+			py = py + font_size * 8
+			pos = -1
+		} else {
+			if asciiSet_images.Size () {
+				renderer.drawImage@sdl (asciiSet_images[text.CharAt(i)], pos * font_size * 8 + px, py, font_size * 8, font_size * 8)
+			} else
+				renderer.drawSymbol (pos * font_size * 8 + px, py, asciiSet[text.CharAt(i)], font_size)
+		}
+		i = i + 1u
+		pos = pos + 1
+	}
+}
+
+drawColoredText (Ref renderer, txt text, long px, long py) {
+	i = 0u
+	pos = 0
+	for i < text.Length () {
+		if text.CharAt (i) == (#"\n") {
+			py = py + font_size * 8
+			pos = -1
+		} else if text.CharAt (i) == (#"#") { 
+			i = i + 1
+			code_r = ""
+			code_g = ""
+			code_b = ""
+		} else {
+			if asciiSet_images.Size () {
+				renderer.drawImage@sdl (asciiSet_images[text.CharAt(i)], pos * font_size * 8 + px, py, font_size * 8, font_size * 8)
+			} else
+				renderer.drawSymbol (pos * font_size * 8 + px, py, asciiSet[text.CharAt(i)], font_size)
+		}
+		i = i + 1u
+		pos = pos + 1
+	}
+}
+
+setupAll (Ref renderer) {
+	setupAsciiSet (renderer)
+	setupCircle (renderer)
+}
+
+repaintAll (Ref renderer) {
+	repaintAsciiSet (renderer)
+	repaintCircle (renderer)
+}
+
+clearAll () {
+	clearAsciiSet ()
+	clearCircle ()
+}
+
+circle_solution = 1000
+circle_image = false
+
+setupCircle (Ref renderer) {
+	circle_image = renderer.emptyImage@sdl (circle_solution, circle_solution)
+	repaintCircle (renderer)
+}
+
+repaintCircle (Ref renderer) {
+	translated_x = translation_x@sdl ()
+	translated_y = translation_y@sdl ()
+	translate@sdl (0, 0)
+	renderer.drawTo@sdl (circle_image)
+	renderer.drawColor@sdl (0, 0, 0, 0)
+	renderer.clearRenderer@sdl ()
+	renderer.drawColor@sdl (255, 255, 255, 255)
+	fillCircle@sdl(renderer, circle_solution / 2, circle_solution / 2, circle_solution / 2)
+	renderer.drawTo@sdl (false)
+	translate@sdl (translated_x, translated_y)
+}
+
+fillCircle (Ref renderer, double x, double y, double radius) {
+	renderer.drawImage@sdl (
+		circle_image,
+		x - radius,
+		y - radius,
+		radius * 2,
+		radius * 2
+	)
+}
+
+clearCircle () {
+	destroyImage@sdl (circle_image)
+}
