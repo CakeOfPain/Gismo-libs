@@ -20,7 +20,7 @@ dumpMemoryUse() txt = fmt(
 		objsize
 	}," bytes \n",
 	"\tObjNode[",ObjectNode_name.Size(),"] = ",{
-		nodesize = 16
+		nodesize = 24
 
 		for i=0; i < ObjectNode_name.Size(); i+=1 {
 			nodesize += ObjectNode_name[i].Length()
@@ -96,12 +96,14 @@ updateText(Ref self, txt value) {
 ObjectNode_next is Ref[0u];
 ObjectNode_name is txt[""];
 ObjectNode_value is Ref[0u];
+ObjectNode_type  is Ref [0u];
 
-ObjectNode(Ref next, txt name, Ref value) Ref {
+ObjectNode(Ref next, txt name, Ref value, Ref type_id) Ref {
 	self := ObjectNode_next.Size ();
 	ObjectNode_next.Add(next);
 	ObjectNode_name.Add(name);
 	ObjectNode_value.Add(value);
+	ObjectNode_type.Add(type_id);
 	
 	return self;
 }
@@ -124,10 +126,32 @@ objectToText(Ref object) txt {
 	return fmt("{", object.classOfObject(), "}")
 }
 
-putField(Ref object, txt fieldname, Ref value) ubyte {
+fieldsOfObject(Ref object) txt[] {
+	fields is txt[]
+	if (object == nil) return fields;
+
+	objnode := Object_head[object];
+	
+	for (ObjectNode_next[objnode] != nil) {
+		fields.Add(ObjectNode_name[objnode])
+		objnode = ObjectNode_next[objnode];
+	}
+
+	if objnode != nil {
+		fields.Add(ObjectNode_name[objnode])
+	}
+
+	return fields;
+}
+
+typeOfField(Ref field) Ref {
+	return ObjectNode_type[field]
+}
+
+putField(Ref object, txt fieldname, Ref value, Ref type_id) ubyte {
 	if (object == nil) return false;
 
-	new_object_node := ObjectNode(nil, fieldname, value);
+	new_object_node := ObjectNode(nil, fieldname, value, type_id);
 
 	objnode := Object_head[object];
 
@@ -164,6 +188,27 @@ getField(Ref object, txt name) Ref {
 	if (!ObjectNode_name[objnode].cmp@std(name)) return nil;
 
 	return ObjectNode_value[objnode];
+}
+
+getFieldReference(Ref object, txt name) Ref {
+	if (object == nil) return nil;
+
+	objnode := Object_head[object];
+
+	if (objnode != nil && ObjectNode_name[objnode].cmp@std(name))
+		return objnode;
+	
+	for (ObjectNode_next[objnode] != nil && !ObjectNode_name[objnode].cmp@std(name)) {
+		objnode = ObjectNode_next[objnode];
+	}
+
+	if (!ObjectNode_name[objnode].cmp@std(name)) return nil;
+
+	return objnode;
+}
+
+getFieldValue(Ref self) Ref {
+	return ObjectNode_value[self]
 }
 
 collectByClass(txt name) Ref[] {

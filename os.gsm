@@ -1,4 +1,4 @@
-GNL_os_handle    is ushort = GNL_LOAD("C:/Gismolang/GNL_files/gismo_os.dll")
+GNL_os_handle    is ushort = GNL_LOAD("/Applications/Gismolang/gismo_os.dll")
 
 GNL_os_openFile  is ushort = GNL_SYMBOL (GNL_os_handle, "openFile")
 GNL_os_closeFile is ushort = GNL_SYMBOL (GNL_os_handle, "closeFile")

@@ -5,7 +5,7 @@ include * @Gismo.UI.Basics
 
 TellParams(
 	txt tell_prompt
-) table;
+) struct;
 
 tell(txt title, txt prompt) {
 	frame := createFrame(title, 200, 100)
@@ -27,7 +27,7 @@ ChooseParams(
 	txt choose_ans1,
 	txt choose_ans2,
 	txt choose_res
-) table;
+) struct;
 
 choose(txt title, txt prompt, txt ans1, txt ans2) txt {
 	frame := createFrame(title, 200, 100)

@@ -1,0 +1,42 @@
+
+
+toJson(*) txt {
+	args is $$args$$()
+	argt is $$argt$$()
+
+	if args.Size() < 0
+		abort@std("json function requires object as first argument!")
+	if argt[0] != type_complex@std {
+		abort@std("json function requires object as first argument!")
+	}
+
+	object := (args[0] as txt) as Ref
+
+	if object == nil
+		return "null"
+
+	json := ""
+
+	fields is fieldsOfObject@classic(object)
+	for i=0; i < fields.Size(); i+=1 {
+		value := "???"
+		field := object.getFieldReference@classic(fields[i])
+		field_type = field.typeOfField@classic()
+		if field_type == type_ulong@std
+			value = fmt(field.getFieldValue@classic().getUInt@classic())
+		else if field_type == type_long@std
+			value = fmt(field.getFieldValue@classic().getInt@classic())
+		else if field_type == type_double@std
+			value = fmt(field.getFieldValue@classic().getFloat@classic())
+		else if field_type == type_text@std
+			value = field.getFieldValue@classic().getText@classic().StringRepresentation@std()
+		else if field_type == type_complex@std
+			value = toJson((field.getFieldValue@classic().getText@classic()) as cmplx)
+
+		json += fmt(fields[i].StringRepresentation@std(), ": ", value)
+		if (i+1) < fields.Size()
+			json += ", "
+	}
+
+	return fmt("{", json, "}")
+}

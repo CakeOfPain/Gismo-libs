@@ -1,3 +1,5 @@
+include *@tracer
+
 type_undefined  := 0
 type_none       := 1
 type_ubyte      := 2
@@ -89,12 +91,11 @@ upper(txt text) txt {
 }
 
 reverse(txt text) txt {
-	new = ""
-	for text.Length() {
-		new = new.InsertChar(text.CharAt(text.Length()-1))
-		text = text.Remove(text.Length()-1)
+	for i = 1; i < text.Length(); i+=1 {
+		text = text.InsertChar(text.CharAt(text.Length() - 1 - i))
+		text = text.Remove(text.Length() - 2 - i)
 	}
-	return new
+	return text
 }
 
 // // Deprecated!
@@ -130,6 +131,16 @@ colorCodeWhite    := 8u
 
 colorCodeReset    := 16u
 
+outerr(txt message) {
+	// fontColor@os(colorCodeRed)
+	output(message)
+
+	output("Full stack trace: ")
+	printStackTrace()
+	
+	// fontColor@os(colorCodeReset)
+}
+
 jErr(txt message) {
 	outerr(message)
 
@@ -137,10 +148,10 @@ jErr(txt message) {
 }
 
 logWarning(txt warning) {
-	fontColor@os(colorCodeYellow)
+	// fontColor@os(colorCodeYellow)
 	output(warning)
 	
-	fontColor@os(colorCodeReset)
+	// fontColor@os(colorCodeReset)
 }
 
 abort(txt message) {
@@ -244,7 +255,7 @@ toBytes(txt string) ubyte[] {
 }
 
 ccolor(short c) txt {
-	fontColor@os(c)
+	// fontColor@os(c)
 	return ""
 }
 
@@ -355,309 +366,309 @@ getChar(txt text, ulong index) ubyte {
 	return (#"\0")
 }
 
-tuple(*) txt {
-    args is $$args$$()
-    argt is $$argt$$()
+// tuple(*) txt {
+//     args is $$args$$()
+//     argt is $$argt$$()
 
-	tuple_buffer = ""
+// 	tuple_buffer = ""
 
-    i = 0u
-    for i < args.Size() {
+//     i = 0u
+//     for i < args.Size() {
 
-        if(argt[i] == type_text) {
-            tuple_buffer = tuple_buffer + TupleElement(args[i] as txt)
-        } else if(argt[i] == type_ulong) {
-            tuple_buffer = tuple_buffer + TupleElement((args[i]) as ulong)
-        } else if(argt[i] == type_long) {
-            tuple_buffer = tuple_buffer + TupleElement(args[i] as long)
-        } else if(argt[i] == type_double) {
-            tuple_buffer = tuple_buffer + TupleElement(args[i] as double)
-        }
+//         if(argt[i] == type_text) {
+//             tuple_buffer = tuple_buffer + TupleElement(args[i] as txt)
+//         } else if(argt[i] == type_ulong) {
+//             tuple_buffer = tuple_buffer + TupleElement((args[i]) as ulong)
+//         } else if(argt[i] == type_long) {
+//             tuple_buffer = tuple_buffer + TupleElement(args[i] as long)
+//         } else if(argt[i] == type_double) {
+//             tuple_buffer = tuple_buffer + TupleElement(args[i] as double)
+//         }
 
-        i = i + 1u
-    }
+//         i = i + 1u
+//     }
 
 
-    return "".writeUInt(i) + tuple_buffer
-}
+//     return "".writeUInt(i) + tuple_buffer
+// }
 
-flatAppend(*) txt {
-	argt is $$argt$$()
-	args is $$args$$()
-	if args.Size() < 2 abort("Too few Arguments for flattAppend, need: (tuple, element)")
+// flatAppend(*) txt {
+// 	argt is $$argt$$()
+// 	args is $$args$$()
+// 	if args.Size() < 2 abort("Too few Arguments for flattAppend, need: (tuple, element)")
 
-	if argt[0u] != type_text abort("Unvalid Argument-Types for flattAppend, need: (tuple: txt, element: any)")
-	tp := args[0u] as txt
+// 	if argt[0u] != type_text abort("Unvalid Argument-Types for flattAppend, need: (tuple: txt, element: any)")
+// 	tp := args[0u] as txt
 
-	length := tp.Index()
-	tuple_buffer := ""
+// 	length := tp.Index()
+// 	tuple_buffer := ""
 
-	for i = 0u; i < length; i += 1u {
-		element_type = tp.$t(i)
-		if element_type == type_text {
-			tuple_buffer += TupleElement(tp.$a(i))
-		} else if element_type == type_ulong {
-			tuple_buffer += TupleElement(tp.$u(i))
-		} else if element_type == type_long {
-			tuple_buffer += TupleElement(tp.$i(i))
-		} else if element_type == type_double{
-			tuple_buffer += TupleElement(tp.$f(i))
-		}
-	}
+// 	for i = 0u; i < length; i += 1u {
+// 		element_type = tp.$t(i)
+// 		if element_type == type_text {
+// 			tuple_buffer += TupleElement(tp.$a(i))
+// 		} else if element_type == type_ulong {
+// 			tuple_buffer += TupleElement(tp.$u(i))
+// 		} else if element_type == type_long {
+// 			tuple_buffer += TupleElement(tp.$i(i))
+// 		} else if element_type == type_double{
+// 			tuple_buffer += TupleElement(tp.$f(i))
+// 		}
+// 	}
 
-	tuple_body := "".writeUInt(length+1) + tuple_buffer
-	element_type = argt[1u]
-	if element_type == type_text {
-		return tuple_body + TupleElement(args[1u] as txt)
-	} else if element_type == type_ulong {	
-		return tuple_body + TupleElement(args[1u] as ulong)
-	} else if element_type == type_long {
-		return tuple_body + TupleElement(args[1u] as long)
-	} else if element_type == type_double {
-		return tuple_body + TupleElement(args[1u] as double)
-	} else {
-		abort("Element of unknown type")
-	}
-}
+// 	tuple_body := "".writeUInt(length+1) + tuple_buffer
+// 	element_type = argt[1u]
+// 	if element_type == type_text {
+// 		return tuple_body + TupleElement(args[1u] as txt)
+// 	} else if element_type == type_ulong {	
+// 		return tuple_body + TupleElement(args[1u] as ulong)
+// 	} else if element_type == type_long {
+// 		return tuple_body + TupleElement(args[1u] as long)
+// 	} else if element_type == type_double {
+// 		return tuple_body + TupleElement(args[1u] as double)
+// 	} else {
+// 		abort("Element of unknown type")
+// 	}
+// }
 
-TupleElement(*) txt {
-	args is $$args$$()
-    argt is $$argt$$()
+// TupleElement(*) txt {
+// 	args is $$args$$()
+//     argt is $$argt$$()
 
-	if args.Size() < 1 {
-		return ""
-	}
+// 	if args.Size() < 1 {
+// 		return ""
+// 	}
 
-	if(argt[0u] == type_text) {
-		text := (args[0u]) as txt
-		buffer = "".writeByte(type_text).writeUInt(text.Length())
+// 	if(argt[0u] == type_text) {
+// 		text := (args[0u]) as txt
+// 		buffer = "".writeByte(type_text).writeUInt(text.Length())
 
-		for i = 0u; i < text.Length(); i += 1u {
-			buffer = buffer.writeByte(text.CharAt(i))
-		}
+// 		for i = 0u; i < text.Length(); i += 1u {
+// 			buffer = buffer.writeByte(text.CharAt(i))
+// 		}
 
-		return buffer
-	} else if(argt[0u] == type_ulong) {
-		return "".writeByte(type_ulong).writeULong(args[0u] as ulong)
-	} else if(argt[0u] == type_long) {
-		return "".writeByte(type_long).writeULong(args[0u] as ulong)
-	} else if(argt[0u] == type_double) {
-		return "".writeByte(type_double).writeULong(args[0u] as ulong)
-	}
+// 		return buffer
+// 	} else if(argt[0u] == type_ulong) {
+// 		return "".writeByte(type_ulong).writeULong(args[0u] as ulong)
+// 	} else if(argt[0u] == type_long) {
+// 		return "".writeByte(type_long).writeULong(args[0u] as ulong)
+// 	} else if(argt[0u] == type_double) {
+// 		return "".writeByte(type_double).writeULong(args[0u] as ulong)
+// 	}
 
-	return ""
-}
+// 	return ""
+// }
 
-writeByte(txt byteWriter, ubyte value) txt {
-	return byteWriter.InsertChar(value)
-}
+// writeByte(txt byteWriter, ubyte value) txt {
+// 	return byteWriter.InsertChar(value)
+// }
 
-writeUShort(txt byteWriter, ulong value) txt {
-	byteWriter = byteWriter.writeByte((value.shR@os(8*1)) & 255u)
-	byteWriter = byteWriter.writeByte((value.shR@os(8*0)) & 255u)
-	return byteWriter
-}
+// writeUShort(txt byteWriter, ulong value) txt {
+// 	byteWriter = byteWriter.writeByte((value.shR@os(8*1)) & 255u)
+// 	byteWriter = byteWriter.writeByte((value.shR@os(8*0)) & 255u)
+// 	return byteWriter
+// }
 
-writeUInt(txt byteWriter, ulong value) txt {
-	byteWriter = byteWriter.writeByte((value.shR@os(8*3)) & 255u)
-	byteWriter = byteWriter.writeByte((value.shR@os(8*2)) & 255u)
-	byteWriter = byteWriter.writeByte((value.shR@os(8*1)) & 255u)
-	byteWriter = byteWriter.writeByte((value.shR@os(8*0)) & 255u)
-	return byteWriter
-}
+// writeUInt(txt byteWriter, ulong value) txt {
+// 	byteWriter = byteWriter.writeByte((value.shR@os(8*3)) & 255u)
+// 	byteWriter = byteWriter.writeByte((value.shR@os(8*2)) & 255u)
+// 	byteWriter = byteWriter.writeByte((value.shR@os(8*1)) & 255u)
+// 	byteWriter = byteWriter.writeByte((value.shR@os(8*0)) & 255u)
+// 	return byteWriter
+// }
 
-writeULong(txt byteWriter, ulong value) txt {
-	byteWriter = byteWriter.writeByte((value.shR@os(8*7)) & 255u)
-	byteWriter = byteWriter.writeByte((value.shR@os(8*6)) & 255u)
-	byteWriter = byteWriter.writeByte((value.shR@os(8*5)) & 255u)
-	byteWriter = byteWriter.writeByte((value.shR@os(8*4)) & 255u)
-	byteWriter = byteWriter.writeByte((value.shR@os(8*3)) & 255u)
-	byteWriter = byteWriter.writeByte((value.shR@os(8*2)) & 255u)
-	byteWriter = byteWriter.writeByte((value.shR@os(8*1)) & 255u)
-	byteWriter = byteWriter.writeByte((value.shR@os(8*0)) & 255u)
-	return byteWriter
-}
+// writeULong(txt byteWriter, ulong value) txt {
+// 	byteWriter = byteWriter.writeByte((value.shR@os(8*7)) & 255u)
+// 	byteWriter = byteWriter.writeByte((value.shR@os(8*6)) & 255u)
+// 	byteWriter = byteWriter.writeByte((value.shR@os(8*5)) & 255u)
+// 	byteWriter = byteWriter.writeByte((value.shR@os(8*4)) & 255u)
+// 	byteWriter = byteWriter.writeByte((value.shR@os(8*3)) & 255u)
+// 	byteWriter = byteWriter.writeByte((value.shR@os(8*2)) & 255u)
+// 	byteWriter = byteWriter.writeByte((value.shR@os(8*1)) & 255u)
+// 	byteWriter = byteWriter.writeByte((value.shR@os(8*0)) & 255u)
+// 	return byteWriter
+// }
 
-$$Element(txt tp, ulong index) txt {
-	current_index = 0u
-	for i = 4u; i < tp.Length(); current_index += 1u {
-		element_type := tp.CharAt(i)
-		if element_type == type_ulong || element_type == type_long || element_type == type_double {
-			buffer = "".InsertChar(element_type)
-			i += 1u
-			for j = 0u; j < 8u && i < tp.Length(); j += 1u {
+// $$Element(txt tp, ulong index) txt {
+// 	current_index = 0u
+// 	for i = 4u; i < tp.Length(); current_index += 1u {
+// 		element_type := tp.CharAt(i)
+// 		if element_type == type_ulong || element_type == type_long || element_type == type_double {
+// 			buffer = "".InsertChar(element_type)
+// 			i += 1u
+// 			for j = 0u; j < 8u && i < tp.Length(); j += 1u {
 				
-				buffer = buffer.InsertChar(tp.CharAt(i))
+// 				buffer = buffer.InsertChar(tp.CharAt(i))
 
-				i += 1u
-			}
+// 				i += 1u
+// 			}
 
-			if current_index == index {
-				return buffer
-			}
+// 			if current_index == index {
+// 				return buffer
+// 			}
 
-		} else if element_type == type_text {
-			// Adding the type
-			buffer = "".InsertChar(element_type)
+// 		} else if element_type == type_text {
+// 			// Adding the type
+// 			buffer = "".InsertChar(element_type)
 			
-			// Get next character
-			i += 1u
+// 			// Get next character
+// 			i += 1u
 
-			// Read the length of the string
-			size := formUInt@os(
-				tp.CharAt(i), tp.CharAt(i + 1u),
-				tp.CharAt(i + 2u), tp.CharAt(i + 3u)
-			)
+// 			// Read the length of the string
+// 			size := formUInt@os(
+// 				tp.CharAt(i), tp.CharAt(i + 1u),
+// 				tp.CharAt(i + 2u), tp.CharAt(i + 3u)
+// 			)
 
-			buffer = buffer.writeUInt(size)
+// 			buffer = buffer.writeUInt(size)
 
-			// Get next character
-			i += 4u
+// 			// Get next character
+// 			i += 4u
 
-			for j = 0u; j < size; j += 1u {
+// 			for j = 0u; j < size; j += 1u {
 				
-				buffer = buffer.InsertChar(tp.CharAt(i))
-				i += 1u 
-			}
+// 				buffer = buffer.InsertChar(tp.CharAt(i))
+// 				i += 1u 
+// 			}
 
-			if current_index == index {
-				return buffer
-			}
-		} else {
-			return "".writeByte(type_none)
-		}
-	}
+// 			if current_index == index {
+// 				return buffer
+// 			}
+// 		} else {
+// 			return "".writeByte(type_none)
+// 		}
+// 	}
 	
-	return "".writeByte(type_none)
-}
+// 	return "".writeByte(type_none)
+// }
 
-$u(txt tp, ulong index) ulong {
-	element = tp.$$Element(index)
-	element_type := element.CharAt(0u)
-	if element_type == type_none jErr("Tuple Error: Out of Bounds!")
-	if element_type != type_ulong jErr("Tuple Error: Wrong type access!")
+// $u(txt tp, ulong index) ulong {
+// 	element = tp.$$Element(index)
+// 	element_type := element.CharAt(0u)
+// 	if element_type == type_none jErr("Tuple Error: Out of Bounds!")
+// 	if element_type != type_ulong jErr("Tuple Error: Wrong type access!")
 
-	return formULong@os(
-		element.CharAt(1u), element.CharAt(2u),
-		element.CharAt(3u), element.CharAt(4u),
-		element.CharAt(5u), element.CharAt(6u),
-		element.CharAt(7u), element.CharAt(8u)
-	)
-}
+// 	return formULong@os(
+// 		element.CharAt(1u), element.CharAt(2u),
+// 		element.CharAt(3u), element.CharAt(4u),
+// 		element.CharAt(5u), element.CharAt(6u),
+// 		element.CharAt(7u), element.CharAt(8u)
+// 	)
+// }
 
-$i(txt tp, ulong index) long {
-	element = tp.$$Element(index)
-	element_type := element.CharAt(0u)
-	if element_type == type_none jErr("Tuple Error: Out of Bounds!")
-	if element_type != type_long jErr("Tuple Error: Wrong type access!")
+// $i(txt tp, ulong index) long {
+// 	element = tp.$$Element(index)
+// 	element_type := element.CharAt(0u)
+// 	if element_type == type_none jErr("Tuple Error: Out of Bounds!")
+// 	if element_type != type_long jErr("Tuple Error: Wrong type access!")
 
-	return bytesToInt(formULong@os(
-		element.CharAt(1u), element.CharAt(2u),
-		element.CharAt(3u), element.CharAt(4u),
-		element.CharAt(5u), element.CharAt(6u),
-		element.CharAt(7u), element.CharAt(8u)
-	))
-}
+// 	return bytesToInt(formULong@os(
+// 		element.CharAt(1u), element.CharAt(2u),
+// 		element.CharAt(3u), element.CharAt(4u),
+// 		element.CharAt(5u), element.CharAt(6u),
+// 		element.CharAt(7u), element.CharAt(8u)
+// 	))
+// }
 
-$f(txt tp, ulong index) double {
-	element = tp.$$Element(index)
-	element_type := element.CharAt(0u)
-	if element_type == type_none jErr("Tuple Error: Out of Bounds!")
-	if element_type != type_double jErr("Tuple Error: Wrong type access!")
+// $f(txt tp, ulong index) double {
+// 	element = tp.$$Element(index)
+// 	element_type := element.CharAt(0u)
+// 	if element_type == type_none jErr("Tuple Error: Out of Bounds!")
+// 	if element_type != type_double jErr("Tuple Error: Wrong type access!")
 
-	return bytesToFloat(formULong@os(
-		element.CharAt(1u), element.CharAt(2u),
-		element.CharAt(3u), element.CharAt(4u),
-		element.CharAt(5u), element.CharAt(6u),
-		element.CharAt(7u), element.CharAt(8u)
-	))
-}
+// 	return bytesToFloat(formULong@os(
+// 		element.CharAt(1u), element.CharAt(2u),
+// 		element.CharAt(3u), element.CharAt(4u),
+// 		element.CharAt(5u), element.CharAt(6u),
+// 		element.CharAt(7u), element.CharAt(8u)
+// 	))
+// }
 
-$a(txt tp, ulong index) txt {
-	element = tp.$$Element(index)
-	element_type := element.CharAt(0u)
-	if element_type == type_none jErr("Tuple Error: Out of Bounds!")
-	if element_type != type_text jErr("Tuple Error: Wrong type access!")
+// $a(txt tp, ulong index) txt {
+// 	element = tp.$$Element(index)
+// 	element_type := element.CharAt(0u)
+// 	if element_type == type_none jErr("Tuple Error: Out of Bounds!")
+// 	if element_type != type_text jErr("Tuple Error: Wrong type access!")
 
-	size := formUInt@os(
-		element.CharAt(1u), element.CharAt(2u),
-		element.CharAt(3u), element.CharAt(4u)
-	)
+// 	size := formUInt@os(
+// 		element.CharAt(1u), element.CharAt(2u),
+// 		element.CharAt(3u), element.CharAt(4u)
+// 	)
 
-	buffer = ""
+// 	buffer = ""
 
-	for i = 0u; i < size; i += 1u {
-		buffer = buffer.InsertChar(element.CharAt(5u + i))
-	}
+// 	for i = 0u; i < size; i += 1u {
+// 		buffer = buffer.InsertChar(element.CharAt(5u + i))
+// 	}
 
-	return buffer
-}
+// 	return buffer
+// }
 
-$t(txt tp, ulong index) ubyte {
-	element = tp.$$Element(index)
-	element_type := element.CharAt(0u)
-	return element_type
-}
+// $t(txt tp, ulong index) ubyte {
+// 	element = tp.$$Element(index)
+// 	element_type := element.CharAt(0u)
+// 	return element_type
+// }
 
-bytesToInt(*) long {
-	args is $$args$$()
-    argt is $$argt$$()
+// bytesToInt(*) long {
+// 	args is $$args$$()
+//     argt is $$argt$$()
 
-	if args.Size() < 1 return 0
+// 	if args.Size() < 1 return 0
 
-	return args[0u] as long
-}
+// 	return args[0u] as long
+// }
 
-bytesToFloat(*) double {
-	args is $$args$$()
-    argt is $$argt$$()
+// bytesToFloat(*) double {
+// 	args is $$args$$()
+//     argt is $$argt$$()
 
-	if args.Size() < 1 return 0.0
+// 	if args.Size() < 1 return 0.0
 
-	return args[0u] as double
-}
+// 	return args[0u] as double
+// }
 
-Index(txt tp) uint {
-	return formUInt@os(tp.getChar(0u), tp.getChar(1u), tp.getChar(2u), tp.getChar(3u))
-}
+// Index(txt tp) uint {
+// 	return formUInt@os(tp.getChar(0u), tp.getChar(1u), tp.getChar(2u), tp.getChar(3u))
+// }
 
-IsEmpty(txt tp) ubyte {
-	if (#tp) == 0u return true
-	return tp.Index() == 0u
-}
+// IsEmpty(txt tp) ubyte {
+// 	if (#tp) == 0u return true
+// 	return tp.Index() == 0u
+// }
 
-NonEmpty(txt tp) ubyte {
-	return !IsEmpty(tp)
-}
+// NonEmpty(txt tp) ubyte {
+// 	return !IsEmpty(tp)
+// }
 
-none := tuple()
+// none := tuple()
 
-TupleRepresentation(txt tp) txt {
-	buffer = "("
+// TupleRepresentation(txt tp) txt {
+// 	buffer = "("
 
-	length := tp.Index()
+// 	length := tp.Index()
 
-	for i = 0u; i < length; i += 1u {
-		element_type := tp.$t(i)
-		if element_type == type_text {
-			buffer = buffer + tp.$a(i) .StringRepresentation()
-		} else if element_type == type_ulong {
-			buffer = buffer + (tp.$u(i)) as txt
-		} else if element_type == type_long {
-			buffer = buffer + (tp.$i(i)) as txt
-		} else if element_type == type_double {
-			buffer = buffer + (tp.$f(i)) as txt
-		} else {
-			buffer = buffer + "none"
-		}
+// 	for i = 0u; i < length; i += 1u {
+// 		element_type := tp.$t(i)
+// 		if element_type == type_text {
+// 			buffer = buffer + tp.$a(i) .StringRepresentation()
+// 		} else if element_type == type_ulong {
+// 			buffer = buffer + (tp.$u(i)) as txt
+// 		} else if element_type == type_long {
+// 			buffer = buffer + (tp.$i(i)) as txt
+// 		} else if element_type == type_double {
+// 			buffer = buffer + (tp.$f(i)) as txt
+// 		} else {
+// 			buffer = buffer + "none"
+// 		}
 
-		if i < (length-1u) {
-			buffer = buffer + ", "
-		}
-	}
+// 		if i < (length-1u) {
+// 			buffer = buffer + ", "
+// 		}
+// 	}
 
-	return buffer + ")"
-}
+// 	return buffer + ")"
+// }
 
 mulText(txt message, ulong times) txt {
 	s := ""

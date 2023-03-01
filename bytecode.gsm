@@ -1,154 +1,157 @@
 
 bytecode_name is txt[
-	"NOP",
-	"LOAD_CONST_NUM8",
-	"LOAD_CONST_NUM16",
-	"LOAD_CONST_NUM32",
-	"LOAD_CONST_NUM64",
-	
-	"LOAD_GLOBAL_NUM8",
-	"LOAD_GLOBAL_NUM16",
-	"LOAD_GLOBAL_NUM32",
-	"LOAD_GLOBAL_NUM64",
-	
-	"STORE_GLOBAL_NUM8",
-	"STORE_GLOBAL_NUM16",
-	"STORE_GLOBAL_NUM32",
-	"STORE_GLOBAL_NUM64",
+	"Nop",
 
-	"LOAD_STACK_NUM8",
-	"LOAD_STACK_NUM16",
-	"LOAD_STACK_NUM32",
-	"LOAD_STACK_NUM64",
-	
-	"STORE_STACK_NUM8",
-	"STORE_STACK_NUM16",
-	"STORE_STACK_NUM32",
-	"STORE_STACK_NUM64",
+	"LoadConstNum8",
+	"LoadConstNum16",
+	"LoadConstNum32",
+	"LoadConstNum64",
 
-	"ADD_I",
-	"ADD_U",
-	"ADD_F",
-	
-	"SUB_I",
-	"SUB_U",
-	"SUB_F",
-	
-	"MUL_I",
-	"MUL_U",
-	"MUL_F",
-	
-	"DIV_I",
-	"DIV_U",
-	"DIV_F",
-	
-	"AND",
-	"OR",
-	"NOT",
-	
-	"EQ_I",
-	"EQ_U",
-	"EQ_F",
-	
-	"EQ_IU",
-	"EQ_FI",
-	"EQ_FU",
+	"LoadGlobalNum8",
+	"LoadGlobalNum16",
+	"LoadGlobalNum32",
+	"LoadGlobalNum64",
 
-	"GREATER_I",
-	"GREATER_U",
-	"GREATER_F",
-	
-	"GREATER_IU",
-	"GREATER_FI",
-	"GREATER_FU",
-	
-	"LESS_I",
-	"LESS_U",
-	"LESS_F",
-	
-	"LESS_IU",
-	"LESS_FI",
-	"LESS_FU",
-	
-	
-	"LOAD_GLOBAL_COLLECTION",
-	"LOAD_STACK_COLLECTION",
+	"StoreGlobalNum8",
+	"StoreGlobalNum16",
+	"StoreGlobalNum32",
+	"StoreGlobalNum64",
 
-	"STORE_GLOBAL_COLLECTION",
-	"STORE_STACK_COLLECTION",
-	
-	"ADD_ELEMENT",
-	"REMOVE_ELEMENT",
-	"SIZEOF_COLLECTION",
-	"LOAD_ELEMENT",
-	"STORE_ELEMENT",
-	
-	"LOAD_CONST_FUNC",
-	"LOAD_GLOBAL_FUNC",
-	"LOAD_STACK_FUNC",
-	
-	"STORE_GLOBAL_FUNC",
-	"STORE_STACK_FUNC",
-	
-	"CALL_FUNC",
-	"RETURN_ELEMENT",
-	"POP",
-	"SWAP",
-	"ROT",
-	
-	"EXIT",
-	
-	"LOAD_CONST_TEXT",
-	"LOAD_GLOBAL_TEXT",
-	"LOAD_STACK_TEXT",
-	
-	"STORE_GLOBAL_TEXT",
-	"STORE_STACK_TEXT",
-	
-	"TEXT_ADD_CHAR",
-	"TEXT_REMOVE_CHAR",
-	"TEXT_POP_CHAR",
-	"TEXT_GETSIZE",
-	"TEXT_GET_CHAR",
-	
-	"COPY_COLLECTION",
-	"COPY_TEXT",
-	
-	"PRINT_I",
-	"PRINT_U",
-	"PRINT_F",
-	"PRINT_C",
-	"PRINT_TEXT",
-	"NEWLINE",
+	"LoadLocalNum8",
+	"LoadLocalNum16",
+	"LoadLocalNum32",
+	"LoadLocalNum64",
 
-	"COLLECTION2TEXT",
-	
-	
-	"GET_INSTANCE",
-	
-	"JUMP_ABS",
-	"JUMP_NEG",
-	"JUMP_POS",
-	"JUMP_IF_TRUE_ABS",
-	"JUMP_IF_FALSE_ABS",
-	"JUMP_IF_TRUE_NEG",
-	"JUMP_IF_FALSE_NEG",
-	"JUMP_IF_TRUE_POS",
-	"JUMP_IF_FALSE_POS",
-	
-	"MOD_I",
-	"MOD_U",
-	
-	"BUILD_EMPTYCOLLECTION",
-	"BUILD_COLLECTION",
-	"INPUT_I",
-	"INPUT_U",
-	"INPUT_F",
-	"INPUT_TEXT",
-	"INPUT_LINE",
-	
-	"TEXT_SET_CHAR",
-	"LOAD_ARGUMENT",
+	"StoreLocalNum8",
+	"StoreLocalNum16",
+	"StoreLocalNum32",
+	"StoreLocalNum64",
+
+	"AddI",
+	"AddU",
+	"AddF",
+
+	"SubI",
+	"SubU",
+	"SubF",
+
+	"MulI",
+	"MulU",
+	"MulF",
+
+	"DivI",
+	"DivU",
+	"DivF",
+
+	"And",
+	"Or",
+	"Not",
+
+	"EqI",
+	"EqU",
+	"EqF",
+
+	"EqIU",
+	"EqFI",
+	"EqFU",
+
+	"GreaterI",
+	"GreaterU",
+	"GreaterF",
+
+	"GreaterIU",
+	"GreaterFI",
+	"GreaterFU",
+
+	"LessI",
+	"LessU",
+	"LessF",
+
+	"LessIU",
+	"LessFI",
+	"LessFU",
+
+
+	"LoadGlobalCmplx",
+	"LoadLocalCmplx",
+
+	"StoreGlobalCmplx",
+	"StoreLocalCmplx",
+
+	"CmplxAddElement",
+	"CmplxRemoveElement",
+	"CmplxSize",
+	"CmplxLoadElement",
+	"CmplxStoreElement",
+
+	"LoadConstFunc",
+	"LoadGlobalFunc",
+	"LoadLocalFunc",
+
+	"StoreGlobalFunc",
+	"StoreLocalFunc",
+
+	"CallFunc",
+	"ReturnElement",
+
+	"Pop",
+	"Swap",
+	"Rot",
+
+	"Exit",
+
+	"LoadConstText",
+	"LoadGlobalText",
+	"LoadLocalText",
+
+	"StoreGlobalText",
+	"StoreLocalText",
+
+	"TextAddChar",
+	"TextRemoveChar",
+	"TextPopChar",
+	"TextGetSize",
+	"TextGetChar",
+
+	"CmplxClone",
+	"TextClone",
+
+	"PrintI",
+	"PrintU",
+	"PrintF",
+	"PrintC",
+	"PrintText",
+	"Newline",
+
+	"Cmplx2Text",
+
+	"GetInstance",
+
+	"JumpAbs",
+	"JumpNeg",
+	"JumpPos",
+	"JumpAbsIfTrue",
+	"JumpAbsIfFalse",
+	"JumpNegIfTrue",
+	"JumpNegIfFalse",
+	"JumpPosIfTrue",
+	"JumpPosIfFalse",
+
+	"ModI",
+	"ModU",
+
+	"CmplxBuildEmpty",
+	"CmplxBuildNew",
+
+	"InputI",
+	"InputU",
+	"InputF",
+	"InputText",
+	"InputLine",
+
+	"TextSetChar",
+	"LoadArgument",
+
 	"I2U",
 	"I2F",
 	"U2I",
@@ -156,236 +159,260 @@ bytecode_name is txt[
 	"F2I",
 	"F2U",
 
-	"IS_NUM",
-	"IS_TEXT",
-	"IS_COLLECTION",
-	"IS_FUNC",
-	"IS_NOTHING",
-	
-	"FLOAT2DOUBLE",
-	"DOUBLE2FLOAT",
-	
-	"BNOT",
-	"COLLECTION_INIT",
-	"TO_STRING_I",
-	"TO_STRING_F",
-	"TO_STRING_U",
-	"STR_TO_I",
-	"STR_TO_F",
-	"STR_TO_U",
-	
-	"UNARY_MINUS_I",
-	"UNARY_MINUS_F",
-	"CONCAT",
-	
-	"INPUT_CHAR",
-	"CALL_VANGUARD",
-	
-	"CLOCK",
-	"TIME",
+	"IsNum",
+	"IsText",
+	"IsCmplx",
+	"IsFunc",
+	"IsNothing",
 
-	"GNL_LOAD",
-	"GNL_SYMBOL",
-	"GNL_EXEC",
-	"GNL_CLOSE",
-	
-	"SETUP_ITER",
-	"NEXT_ITER",
+	"Float2Double",
+	"Double2Float",
 
-	"TEXT_HASH"
+	"BNot",
+
+	"CmplxInit",
+
+	"I2Text",
+	"F2Text",
+	"U2Text",
+
+	"Text2I",
+	"Text2F",
+	"Text2U",
+
+	"UnaryMinusI",
+	"UnaryMinusF",
+
+	"TextConcat",
+
+	"InputChar",
+	"CallAsync",
+	"Clock",
+	"Time",
+
+	"GllLoad",
+	"GllSymbol",
+	"GllExec",
+	"GnlClose",
+
+	"SetupIter",
+	"NextIter",
+
+	"TextHash",
+
+	// Debugging
+	"Hint",
+
+	// Additional Bit operator
+	"ShiftL",
+	"ShiftR"
 ]
 
-bytecode_arglength is int[
-	0,			//NOP
-	4,			//LOAD_CONST_NUM8
-	4,			//LOAD_CONST_NUM16
-	4,			//LOAD_CONST_NUM32
-	4,			//LOAD_CONST_NUM64
-	
-	4,			//LOAD_GLOBAL_NUM8
-	4,			//LOAD_GLOBAL_NUM16
-	4,			//LOAD_GLOBAL_NUM32
-	4,			//LOAD_GLOBAL_NUM64
-	
-	4,			//STORE_GLOBAL_NUM8
-	4,			//STORE_GLOBAL_NUM16
-	4,			//STORE_GLOBAL_NUM32
-	4,			//STORE_GLOBAL_NUM64
+bytecode_arglen is int[
+	0, // Nop,
 
-	4,			//LOAD_STACK_NUM8	
-	4,			//LOAD_STACK_NUM16
-	4,			//LOAD_STACK_NUM32
-	4,			//LOAD_STACK_NUM64
-	
-	4,			//STORE_STACK_NUM8
-	4,			//STORE_STACK_NUM16
-	4,			//STORE_STACK_NUM32
-	4,			//STORE_STACK_NUM64
+	4, // LoadConstNum8,
+	4, // LoadConstNum16,
+	4, // LoadConstNum32,
+	4, // LoadConstNum64,
 
-	0,			//ADD_I
-	0,			//ADD_U
-	0,			//ADD_F
-	
-	0,			//SUB_I
-	0,			//SUB_U
-	0,			//SUB_F
-	
-	0,			//MUL_I
-	0,			//MUL_U
-	0,			//MUL_F
-	
-	0,			//DIV_I
-	0,			//DIV_U
-	0,			//DIV_F
-	
-	0,			//AND
-	0,			//OR
-	0,			//NOT
-	
-	0,			//EQ_I
-	0,			//EQ_U
-	0,			//EQ_F
-	
-	0,			//EQ_IU
-	0,			//EQ_FI
-	0,			//EQ_FU
+	4, // LoadGlobalNum8,
+	4, // LoadGlobalNum16,
+	4, // LoadGlobalNum32,
+	4, // LoadGlobalNum64,
 
-	
-	0,			//GREATER_I
-	0,			//GREATER_U
-	0,			//GREATER_F
-	
-	0,			//GREATER_IU
-	0,			//GREATER_FI
-	0,			//GREATER_FU
-	
-	0,			//SMALLER_I
-	0,			//SMALLER_U
-	0,			//SMALLER_F
+	4, // StoreGlobalNum8,
+	4, // StoreGlobalNum16,
+	4, // StoreGlobalNum32,
+	4, // StoreGlobalNum64,
 
-	0,			//SMALLER_IU
-	0,			//SMALLER_FI
-	0,			//SMALLER_FU
-	
-	4,			//LOAD_GLOBAL_COLLECTION
-	4,			//LOAD_STACK_COLLECTION
+	4, // LoadLocalNum8,
+	4, // LoadLocalNum16,
+	4, // LoadLocalNum32,
+	4, // LoadLocalNum64,
 
-	4,			//STORE_GLOBAL_COLLECTION
-	4,			//STORE_STACK_COLLECTION
-	
-	0,			//ADD_ELEMENT
-	0,			//REMOVE_ELEMENT
-	0,			//SIZEOF_COLLECTION
-	0,			//LOAD_ELEMENT
-	0,			//STORE_ELEMENT
-	
-	4,			//LOAD_CONST_FUNC
-	4,			//LOAD_GLOBAL_FUNC
-	4,			//LOAD_STACK_FUNC
-	
-	4,			//STORE_GLOBAL_FUNC
-	4,			//STORE_STACK_FUNC
-	
-	4,			//CALL_FUNC
-	0,			//RETURN_ELEMENT
-	0,			//POP
-	0,			//SWAP
-	0,			//ROT
-	
-	0,			//EXIT
-	
-	4,			//LOAD_CONST_TEXT
-	4,			//LOAD_GLOBAL_TEXT
-	4,			//LOAD_STACK_TEXT
-	
-	4,			//STORE_GLOBAL_TEXT
-	4,			//STORE_STACK_TEXT
-	
-	0,			//TEXT_ADD_CHAR
-	0,			//TEXT_REMOVE_CHAR
-	0,			//TEXT_POP_CHAR
-	0,			//TEXT_GETSIZE
-	0,			//TEXT_GET_CHAR
-	
-	0,			//COPY_COLLECTION
-	0,			//COPY_TEXT
-	
-	0,			//PRINT_I
-	0,			//PRINT_U
-	0,			//PRINT_F
-	0,			//PRINT_C
-	0,			//PRINT_TEXT
-	0,			//NEWLINE
+	4, // StoreLocalNum8,
+	4, // StoreLocalNum16,
+	4, // StoreLocalNum32,
+	4, // StoreLocalNum64,
 
-	0,			//COLLECTION2TEXT
-	
-	
-	0,			//GET_INSTANCE
-	
-	4,			//JUMP_ABS
-	2,			//JUMP_NEG
-	2,			//JUMP_POS
-	4,			
-	4,
-	2,
-	2,
-	2,
-	2,
-	
-	0,
-	0,
-	
-	0,
-	4,
-	0,
-	0,
-	0,
-	0,
-	0,
-	
-	0,
-	4,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
+	0, // AddI,
+	0, // AddU,
+	0, // AddF,
 
-	0,
-	0,
-	0,
-	0,
-	0,
-	
-	0,
-	0,
-	
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	
-	0,
-	0,
-	0,
-	
-	0,
-	0,
-	
-	0,
-	0,
+	0, // SubI,
+	0, // SubU,
+	0, // SubF,
 
-	0,
-	0,
-	4,
-	0,
+	0, // MulI,
+	0, // MulU,
+	0, // MulF,
 
-	0,
-	0,
-	0
+	0, // DivI,
+	0, // DivU,
+	0, // DivF,
+
+	0, // And,
+	0, // Or,
+	0, // Not,
+
+	0, // EqI,
+	0, // EqU,
+	0, // EqF,
+
+	0, // EqIU,
+	0, // EqFI,
+	0, // EqFU,
+
+	0, // GreaterI,
+	0, // GreaterU,
+	0, // GreaterF,
+
+	0, // GreaterIU,
+	0, // GreaterFI,
+	0, // GreaterFU,
+
+	0, // LessI,
+	0, // LessU,
+	0, // LessF,
+
+	0, // LessIU,
+	0, // LessFI,
+	0, // LessFU,
+
+
+	4, // LoadGlobalCmplx,
+	4, // LoadLocalCmplx,
+
+	4, // StoreGlobalCmplx,
+	4, // StoreLocalCmplx,
+
+	0, // CmplxAddElement,
+	0, // CmplxRemoveElement,
+	0, // CmplxSize,
+	0, // CmplxLoadElement,
+	0, // CmplxStoreElement,
+
+	4, // LoadConstFunc,
+	4, // LoadGlobalFunc,
+	4, // LoadLocalFunc,
+
+	4, // StoreGlobalFunc,
+	4, // StoreLocalFunc,
+
+	4, // CallFunc,
+	0, // ReturnElement,
+
+	0, // Pop,
+	0, // Swap,
+	0, // Rot,
+
+	0, // Exit,
+
+	4, // LoadConstText,
+	4, // LoadGlobalText,
+	4, // LoadLocalText,
+
+	4, // StoreGlobalText,
+	4, // StoreLocalText,
+
+	0, // TextAddChar,
+	0, // TextRemoveChar,
+	0, // TextPopChar,
+	0, // TextGetSize,
+	0, // TextGetChar,
+
+	0, // CmplxClone,
+	0, // TextClone,
+
+	0, // PrintI,
+	0, // PrintU,
+	0, // PrintF,
+	0, // PrintC,
+	0, // PrintText,
+	0, // Newline,
+
+	0, // Cmplx2Text,
+
+	0, // GetInstance,
+
+	4, // JumpAbs,
+	2, // JumpNeg,
+	2, // JumpPos,
+	4, // JumpAbsIfTrue,
+	4, // JumpAbsIfFalse,
+	2, // JumpNegIfTrue,
+	2, // JumpNegIfFalse,
+	2, // JumpPosIfTrue,
+	2, // JumpPosIfFalse,
+
+	0, // ModI,
+	0, // ModU,
+
+	0, // CmplxBuildEmpty,
+	4, // CmplxBuildNew,
+
+	0, // InputI,
+	0, // InputU,
+	0, // InputF,
+	0, // InputText,
+	0, // InputLine,
+
+	0, // TextSetChar,
+	4, // LoadArgument,
+
+	0, // I2U,
+	0, // I2F,
+	0, // U2I,
+	0, // U2F,
+	0, // F2I,
+	0, // F2U,
+
+	0, // IsNum,
+	0, // IsText,
+	0, // IsCmplx,
+	0, // IsFunc,
+	0, // IsNothing,
+
+	0, // Float2Double,
+	0, // Double2Float,
+
+	0, // BNot,
+
+	0, // CmplxInit,
+
+	0, // I2Text,
+	0, // F2Text,
+	0, // U2Text,
+
+	0, // Text2I,
+	0, // Text2F,
+	0, // Text2U,
+
+	0, // UnaryMinusI,
+	0, // UnaryMinusF,
+
+	0, // TextConcat,
+
+	0, // InputChar,
+	0, // CallAsync,
+	0, // Clock,
+	0, // Time,
+
+	-1, // GllLoad,
+	0, // GllSymbol,
+	0, // GllExec,
+	0, // GnlClose,
+
+	0, // SetupIter,
+	0, // NextIter,
+
+	0, // TextHash,
+
+	// Debugging
+	-1, // Hint,
+
+	// Additional Bit operator
+	0, // ShiftL,
+	0 // ShiftR,
 ]

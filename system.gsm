@@ -1,84 +1,72 @@
-include *@tracer
-
-outerr(txt message) {
-	fontColor@os(colorCodeRed@std)
-	output(message)
-
-	output("Full stack trace: ")
-	printStackTrace()
-	
-	fontColor@os(colorCodeReset@std)
-}
-
 null := "0"
 
 isNull(txt value) bool = (#value) == (#null)
-
 
 // This is the Compiler Version, that can
 // be changed according to new versions
 $_compiler_version_$ := "G2.9"
 
-$_getTableDescription_$(txt index) txt {
+$_getStructDescription_$(txt index) txt {
 	values := ""
 	
 	for index.Length () {
 		character := index.CharAt (0u)
 		index = index.Remove(0u)
-		if character == #"(" break
+		if character == (#"(")
+			break
 	}
 
-	
-	index = index.Remove(index.Length() - 1u)
+	if index.Length() > 0u
+		index = index.Remove(index.Length() - 1u)
 	
 	return index
 }
 
-// Table-Classes
+// Structs
 
 $_constructor_$(*) txt {
 	args is $$args$$()
 	argt is $$argt$$()
-	tableIndex := args[0u] as txt
+	structIndex := args[0u] as txt
 
-	description := tableIndex.$_getTableDescription_$()
+	description := structIndex.$_getStructDescription_$()
 
 	fields is split@std(description, ",")
 
-	object := Object@classic(tableIndex)
-
+	object := Object@classic(structIndex)
+	
 	for i = 1u; i < args.Size (); i += 1u {
 		field is split@std(fields[i-1u], ":")
 		fieldname := field[0u]
 
 		formatType := getFormatType@std(argt[i])
-		if formatType == type_ulong@std object.putField@classic(fieldname, UInt@classic(args[i] as ulong))
-		else if formatType == type_long@std object.putField@classic(fieldname, Int@classic(args[i] as long))
-		else if formatType == type_double@std object.putField@classic(fieldname, Float@classic(args[i] as double))
-		else if formatType == type_text@std object.putField@classic(fieldname, Text@classic(args[i] as txt))
-		else if formatType == type_complex@std object.putField@classic(fieldname, Text@classic(args[i] as txt))
+		if formatType == type_ulong@std object.putField@classic(fieldname, UInt@classic(args[i] as ulong), formatType)
+		else if formatType == type_long@std object.putField@classic(fieldname, Int@classic(args[i] as long), formatType)
+		else if formatType == type_double@std object.putField@classic(fieldname, Float@classic(args[i] as double), formatType)
+		else if formatType == type_text@std object.putField@classic(fieldname, Text@classic(args[i] as txt), formatType)
+		else if formatType == type_complex@std object.putField@classic(fieldname, Text@classic(args[i] as txt), formatType)
 	}
 
 	return fmt(object)
 }
 
-$_selectText_$(txt tableIndex, txt column) txt {
-	object_id := tableIndex as Ref
+$_selectText_$(txt structIndex, txt column) txt {
+	object_id := structIndex as Ref
 	return object_id.getField@classic(column).getText@classic()
 }
 
-$_selectUInt_$(txt tableIndex, txt column) ulong {
-	object_id := tableIndex as Ref
+$_selectUInt_$(txt structIndex, txt column) ulong {
+	object_id := structIndex as Ref
 	return object_id.getField@classic(column).getUInt@classic()
 }
 
-$_selectInt_$(txt tableIndex, txt column) long {
-	object_id := tableIndex as Ref
+$_selectInt_$(txt structIndex, txt column) long {
+	object_id := structIndex as Ref
 	return object_id.getField@classic(column).getInt@classic()
 }
 
-$_selectFloat_$(txt tableIndex, txt column) double {
-	object_id := tableIndex as Ref
+$_selectFloat_$(txt structIndex, txt column) double {
+	object_id := structIndex as Ref
 	return object_id.getField@classic(column).getFloat@classic()
 }
 
@@ -97,10 +85,15 @@ $_update_$(*) {
 	else abort@std("Field isn't a valid formatType!")
 }
 
-drop(txt tableIndex) {
+drop(txt structIndex) {
 
 }
 
-classOf(txt tableIndex) txt {
-	return (tableIndex as Ref).classOfObject@classic()
+classOf(txt structIndex) txt {
+	return (structIndex as Ref).classOfObject@classic()
+}
+
+fieldsOf(txt structIndex) txt[] {
+	fields is fieldsOfObject@classic(structIndex as Ref)
+	return fields
 }

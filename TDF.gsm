@@ -1,5 +1,4 @@
 // TDF - Tuple Data Format
-// Written by - Leo Englert
 // Version - 1.0
 // Description - provides parsing methods
 
@@ -13,7 +12,7 @@
 TDF_Parser(
 	TDF_TokenList tokens,
 	int count
-) table;
+) struct;
 
 TDF_createParser(TDF_TokenList tokens) TDF_Parser = TDF_Parser(tokens, 0)
 
@@ -82,7 +81,7 @@ TDF_Token(
 	int token_type,
 	int start,
 	int end
-) table;
+) struct;
 
 TDF_destroyToken(TDF_Token token) {
 	drop(token)
@@ -98,12 +97,12 @@ TDF_EMPTY_TOKEN() TDF_Token = TDF_Token("", *TT_NONE(), 0, 0)
 TDF_TokenListNode(
 	TDF_Token token,
 	TDF_TokenListNode next
-) table;
+) struct;
 
 TDF_TokenList(
 	TDF_TokenListNode head,
 	int size
-) table;
+) struct;
 
 TDF_createTokenList() TDF_TokenList = TDF_TokenList(null, 0)
 
@@ -211,7 +210,7 @@ TDF_prettyPrintTokens(TDF_TokenList list) {
 TDF_Tokenizer(
 	txt text,
 	int count
-) table;
+) struct;
 
 TDF_createTokenizer(txt text) TDF_Tokenizer = TDF_Tokenizer(text, 0)
 

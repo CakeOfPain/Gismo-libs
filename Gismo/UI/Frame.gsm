@@ -19,7 +19,7 @@ FrameStyle(
 	txt themeColor3,// GRAY  - example: Button hover
 	txt themeColor4,// BLUE  - example: Button press 
 	txt themeColor5 // YELLOW- text marker
-) table;
+) struct;
 
 createFrameStyle() FrameStyle = FrameStyle(
 	0, // xPos
@@ -50,11 +50,11 @@ MouseIO(
 	int y,
 	int btn,
 	int tglbtn
-) table;
+) struct;
 
 KeyboardIO(
 	txt inputs
-) table;
+) struct;
 
 readInputs(Frame frame) txt {
 	io := frame.io
@@ -67,11 +67,11 @@ readInputs(Frame frame) txt {
 FrameIO(
 	MouseIO mouse,
 	KeyboardIO keyboard
-) table;
+) struct;
 
 PrivateFrame(
 	Ref winhandler
-) table;
+) struct;
 
 Frame(
 	PrivateFrame private,
@@ -81,7 +81,7 @@ Frame(
 	bool quit,
 	int width, int height,
 	bool resizable
-) table;
+) struct;
 
 GISMOUI_SDL_usecount is uint = 0
 
