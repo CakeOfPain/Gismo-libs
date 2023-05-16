@@ -6,7 +6,7 @@ toJson(*) txt {
 
 	if args.Size() < 0
 		abort@std("json function requires object as first argument!")
-	if argt[0] != type_complex@std {
+	if argt[0] != type_complex@std && argt[0] != type_text@std {
 		abort@std("json function requires object as first argument!")
 	}
 

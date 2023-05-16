@@ -1,0 +1,118 @@
+
+ResponseHeader(
+	txt acceptRanges,
+	txt age,
+	txt allow,
+	txt cacheControl,
+	txt connection,
+	txt contentEncoding,
+	txt contentLanguage,
+	txt contentLength,
+	txt contentLocation,
+	txt contentMD5,
+	txt contentDisposition,
+	txt contentRange,
+	txt contentSecurityPolicy,
+	txt contentType,
+	txt date,
+	txt etag,
+	txt expires,
+	txt lastModified,
+	txt link,
+	txt location,
+	txt p3p,
+	txt pragma,
+	txt proxyAuthenticate,
+	txt refresh,
+	txt retryAfter,
+	txt server,
+	txt setCookie,
+	txt trailer,
+	txt transferEncoding,
+	txt vary,
+	txt via,
+	txt warning,
+	txt wwwAuthenticate
+) struct;
+
+createResponseHeader() ResponseHeader = ResponseHeader(
+	"","","",
+	"","","","","","","","","","",
+	"","","","","","","","","","",
+	"","","","","","","","","","")
+
+appendArgument(txt response, txt key, txt value) txt {
+	if (#value) response += key + ": " + value + "\r\n"
+	return response
+}
+
+toText(ResponseHeader responseHeader, txt status) txt {
+	res := "HTTP/1.1 " + status + "\r\n"
+	res = res.appendArgument("Accept-Ranges", responseHeader.acceptRanges)
+	res = res.appendArgument("Age", responseHeader.age)
+	res = res.appendArgument("Allow", responseHeader.allow)
+	res = res.appendArgument("Cache-Control", responseHeader.cacheControl)
+	res = res.appendArgument("Connection", responseHeader.connection)
+	res = res.appendArgument("Content-Encoding", responseHeader.contentEncoding)
+	res = res.appendArgument("Content-Language", responseHeader.contentLanguage)
+	res = res.appendArgument("Content-Length", responseHeader.contentLength)
+	res = res.appendArgument("Content-Location", responseHeader.contentLocation)
+	res = res.appendArgument("Content-MD5", responseHeader.contentMD5)
+	res = res.appendArgument("Content-Disposition", responseHeader.contentDisposition)
+	res = res.appendArgument("Content-Range", responseHeader.contentRange)
+	res = res.appendArgument("Content-Security-Policy", responseHeader.contentSecurityPolicy)
+	res = res.appendArgument("Content-Type", responseHeader.contentType)
+	res = res.appendArgument("Date", responseHeader.date)
+	res = res.appendArgument("ETag", responseHeader.etag)
+	res = res.appendArgument("Expires", responseHeader.expires)
+	res = res.appendArgument("Last-Modified", responseHeader.lastModified)
+	res = res.appendArgument("Link", responseHeader.link)
+	res = res.appendArgument("Location", responseHeader.location)
+	res = res.appendArgument("P3P", responseHeader.p3p)
+	res = res.appendArgument("Pragma", responseHeader.pragma)
+	res = res.appendArgument("Proxy-Authentication", responseHeader.proxyAuthenticate)
+	res = res.appendArgument("Refresh", responseHeader.refresh)
+	res = res.appendArgument("Retry-After", responseHeader.retryAfter)
+	res = res.appendArgument("Server", responseHeader.server)
+	res = res.appendArgument("Set-Cookie", responseHeader.setCookie)
+	res = res.appendArgument("Trailer", responseHeader.trailer)
+	res = res.appendArgument("Transfer-Encoding", responseHeader.transferEncoding)
+	res = res.appendArgument("Vary", responseHeader.vary)
+	res = res.appendArgument("Via", responseHeader.via)
+	res = res.appendArgument("Warning", responseHeader.warning)
+	res = res.appendArgument("WWW-Authentication", responseHeader.wwwAuthenticate)
+
+	return res.fmt("\n")
+}
+
+toText(ResponseHeader responseHeader) txt {
+	return responseHeader.toText("200 OK")
+}
+
+jsonResponse(txt json) txt {
+	if json.CharAt(0) != '{'
+		json = toJson@json(json)
+
+	responseHeader := createResponseHeader()
+	responseHeader.contentType = "application/json"
+	
+	return responseHeader.toText() + "\r\n" + json
+}
+
+htmlResponse(txt html) txt {
+	responseHeader := createResponseHeader()
+	responseHeader.contentType = "text/html"
+	
+	return responseHeader.toText() + "\r\n" + html
+}
+
+errorResponse(txt html) {
+	responseHeader := createResponseHeader()
+	responseHeader.contentType = "text/html"
+	
+	html = "<h1>Internal Function Error</h1>" + html
+
+	output(responseHeader.toText("500 Internal Server Error") + "\r\n" + html)
+
+	exit(1)
+}

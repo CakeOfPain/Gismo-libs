@@ -1,0 +1,43 @@
+
+prepare(*) txt {
+	args is $$args$$()
+	argt is $$argt$$()
+
+	if args.Size() < 1 {
+		abort@std("format@sql(*): missing format string!")
+	}
+
+	if argt[0] != type_text@std {
+		abort@std("format@sql(*): wrong datatype for format string!")
+	}
+
+	formattingText := args[0] as txt
+	formattedText := ""
+
+	argumentCount is int = 1
+
+	for i=0; i < formattingText.Length(); i += 1 {
+		character := formattingText.CharAt(i)
+		if character == '?' {
+			if !(argumentCount < argt.Size())
+				abort@std("format@sql(*): unsupported data type!")
+			t := argt[argumentCount]
+			if t == type_ulong@std {
+				formattedText += fmt(args[argumentCount] as ulong)
+			} else if t == type_long@std {
+				formattedText += fmt(args[argumentCount] as long)
+			} else if t == type_text@std {
+				formattedText += SQLStringRepresentation@std(args[argumentCount] as txt)
+			} else if t == type_double@std {
+				formattedText += fmt(args[argumentCount] as double)
+			} else {
+				abort@std("format@sql(*): unsupported data type!")
+			}
+			argumentCount += 1
+		} else {
+			formattedText += "".InsertChar(character)
+		}
+	}
+
+	return formattedText
+}
