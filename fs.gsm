@@ -1,0 +1,68 @@
+
+gsiLib := GLL_LOAD("<GSI>")
+gsiFetch := GLL_SYMBOL(gsiLib, "fetch")
+
+ResultTxt(
+	txt content,
+	txt error
+) struct;
+
+ResultFile(
+	File file,
+	txt error
+) struct;
+
+ResultDir(
+	Dir dir,
+	txt error
+) struct;
+
+Path(txt path) struct;
+
+Exists(Path path) bool {
+	return path.Type() != 0
+}
+
+Type(Path path) ubyte {
+	return #GLL_EXEC(gsiLib, gsiFetch, txt, path.path, 1)
+}
+
+AsFile(Path path) ResultFile {
+	file := File(path.path)
+	if !file.Exists()
+		return ResultFile(file, "File Error: " + file.path + " is not a file or does not exist")
+	return ResultFile(file, "")
+}
+
+AsDir(Path path) ResultDir {
+	dir := Dir(path.path)
+	if !dir.Exists()
+		return ResultDir(dir, "Directory Error: " + dir.path + " is not a directory or does not exist")
+	return ResultDir(dir, "")
+}
+
+File(
+	txt path
+) struct;
+
+Read(File file) ResultTxt {
+	if !file.Exists()
+		return ResultTxt("", "File Error: " + file.path + " is not a file or does not exist")
+	return ResultTxt(GLL_EXEC(gsiLib, gsiFetch, txt, file.path, 3), "")
+}
+
+Exists(File file) bool {
+	return (#GLL_EXEC(gsiLib, gsiFetch, txt, file.path, 1)) == 'f'
+}
+
+Dir(txt path) struct;
+
+List(Dir dir) ResultTxt {
+	if !dir.Exists()
+		return ResultTxt("", "Directory Error: " + dir.path + " is not a dir or does not exist")
+	return ResultTxt(GLL_EXEC(gsiLib, gsiFetch, txt, dir.path, 3), "")
+}
+
+Exists(Dir dir) bool {
+	return (#GLL_EXEC(gsiLib, gsiFetch, txt, dir.path, 1)) == 'd'
+}

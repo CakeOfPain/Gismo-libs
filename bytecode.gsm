@@ -401,7 +401,7 @@ bytecode_arglen is int[
 
 	-1, // GllLoad,
 	0, // GllSymbol,
-	0, // GllExec,
+	4, // GllExec,
 	0, // GnlClose,
 
 	0, // SetupIter,
