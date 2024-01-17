@@ -1,6 +1,7 @@
 null := "0"
 
 isNull(txt value) bool = (#value) == (#null)
+isequal(txt a, txt b) bool = a.cmp@std(b)
 
 // This is the Compiler Version, that can
 // be changed according to new versions
