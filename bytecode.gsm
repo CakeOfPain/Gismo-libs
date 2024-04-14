@@ -1,4 +1,213 @@
 
+Nop := 0
+
+LoadConstNum8 := 1
+LoadConstNum16 := 2
+LoadConstNum32 := 3
+LoadConstNum64 := 4
+
+LoadGlobalNum8 := 5
+LoadGlobalNum16 := 6
+LoadGlobalNum32 := 7
+LoadGlobalNum64 := 8
+
+StoreGlobalNum8 := 9
+StoreGlobalNum16 := 10
+StoreGlobalNum32 := 11
+StoreGlobalNum64 := 12
+
+LoadLocalNum8 := 13
+LoadLocalNum16 := 14
+LoadLocalNum32 := 15
+LoadLocalNum64 := 16
+
+StoreLocalNum8 := 17
+StoreLocalNum16 := 18
+StoreLocalNum32 := 19
+StoreLocalNum64 := 20
+
+AddI := 21
+AddU := 22
+AddF := 23
+
+SubI := 24
+SubU := 25
+SubF := 26
+
+MulI := 27
+MulU := 28
+MulF := 29
+
+DivI := 30
+DivU := 31
+DivF := 32
+
+And := 33
+Or := 34
+Not := 35
+
+EqI := 36
+EqU := 37
+EqF := 38
+
+EqIU := 39
+EqFI := 40
+EqFU := 41
+
+GreaterI := 42
+GreaterU := 43
+GreaterF := 44
+
+GreaterIU := 45
+GreaterFI := 46
+GreaterFU := 47
+
+LessI := 48
+LessU := 49
+LessF := 50
+
+LessIU := 51
+LessFI := 52
+LessFU := 53
+
+
+LoadGlobalCmplx := 54
+LoadLocalCmplx := 55
+
+StoreGlobalCmplx := 56
+StoreLocalCmplx := 57
+
+CmplxAddElement := 58
+CmplxRemoveElement := 59
+CmplxSize := 60
+CmplxLoadElement := 61
+CmplxStoreElement := 62
+
+LoadConstFunc := 63
+LoadGlobalFunc := 64
+LoadLocalFunc := 65
+
+StoreGlobalFunc := 66
+StoreLocalFunc := 67
+
+CallFunc := 68
+ReturnElement := 69
+
+Pop := 70
+Swap := 71
+Rot := 72
+
+Exit := 73
+
+LoadConstText := 74
+LoadGlobalText := 75
+LoadLocalText := 76
+
+StoreGlobalText := 77
+StoreLocalText := 78
+
+TextAddChar := 79
+TextRemoveChar := 80
+TextPopChar := 81
+TextGetSize := 82
+TextGetChar := 83
+
+
+CmplxClone := 84
+TextClone := 85
+
+PrintI := 86
+PrintU := 87
+PrintF := 88
+PrintC := 89
+PrintText := 90
+Newline := 91
+
+Cmplx2Text := 92
+
+GetInstance := 93
+
+JumpAbs := 94
+JumpNeg := 95
+JumpPos := 96
+JumpAbsIfTrue := 97
+JumpAbsIfFalse := 98
+JumpNegIfTrue := 99
+JumpNegIfFalse := 100
+JumpPosIfTrue := 101
+JumpPosIfFalse := 102
+
+ModI := 103
+ModU := 104
+
+CmplxBuildEmpty := 105
+CmplxBuildNew := 106
+
+InputI := 107
+InputU := 108
+InputF := 109
+InputText := 110
+InputLine := 111
+
+TextSetChar := 112
+LoadArgument := 113
+
+I2U := 114
+I2F := 115
+U2I := 116
+U2F := 117
+F2I := 118
+F2U := 119
+
+IsNum := 120
+IsText := 121
+IsCmplx := 122
+IsFunc := 123
+IsNothing := 124
+
+Float2Double := 125
+Double2Float := 126
+
+BNot := 127
+
+CmplxInit := 128
+
+I2Text := 129
+F2Text := 130
+U2Text := 131
+
+Text2I := 132
+Text2F := 133
+Text2U := 134
+
+UnaryMinusI := 135
+UnaryMinusF := 136
+
+TextConcat := 137
+
+InputChar := 138
+CallAsync := 139
+Clock := 140
+Time := 141
+
+GllLoad := 142
+GllSymbol := 143
+GllExec := 144
+GnlClose := 145
+
+SetupIter := 146
+NextIter := 147
+
+TextHash := 148
+
+// Debugging
+Hint := 149
+
+// Additional Bit operator
+ShiftL := 150
+ShiftR := 151
+
+
 bytecode_name is txt[
 	"Nop",
 

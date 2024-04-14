@@ -2,6 +2,12 @@
 gsiLib := GLL_LOAD("<GSI>")
 gsiFetch := GLL_SYMBOL(gsiLib, "fetch")
 
+FETCH_KIND := 1
+FETCH_SIZE := 2
+FETCH_CONTENT := 3
+
+fetch(txt path, int mode) txt = GLL_EXEC(gsiLib, gsiFetch, txt, path, mode)
+
 ResultTxt(
 	txt content,
 	txt error
@@ -34,12 +40,16 @@ AsFile(Path path) ResultFile {
 	return ResultFile(file, "")
 }
 
+as_File(Path path) ResultFile = AsFile(path)
+
 AsDir(Path path) ResultDir {
 	dir := Dir(path.path)
 	if !dir.Exists()
 		return ResultDir(dir, "Directory Error: " + dir.path + " is not a directory or does not exist")
 	return ResultDir(dir, "")
 }
+
+as_Dir(Path path) ResultDir = AsDir(path)
 
 File(
 	txt path
