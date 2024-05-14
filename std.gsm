@@ -245,7 +245,7 @@ ccolor(short c) txt {
 // HINT: Prefer these function over using isInText with one of the sets
 isUpper(ubyte ch) bool = ch >= 'A' && ch <= 'Z'
 isLower(ubyte ch) bool = ch >= 'a' && ch <= 'z'
-isNumeric(ubyte ch) bool = ch >= '0' && ch <= '9'
+isNumeric(ubyte ch) bool = ch >= '0' && (ch < '9' || ch == '9')
 isAlpha(ubyte ch) bool = isUpper(ch) || isLower(ch)
 isAlphaNumeric(ubyte ch) bool = isAlpha(ch) || isNumeric(ch)
 isWhitespace(ubyte ch) bool = ch.isInText(whitespace)

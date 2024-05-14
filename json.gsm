@@ -1,4 +1,5 @@
 
+isequal(txt a, txt b) bool = a.cmp@std(b)
 
 toJson(*) txt {
 	args is $$args$$()
@@ -39,4 +40,132 @@ toJson(*) txt {
 	}
 
 	return fmt("{", json, "}")
+}
+
+
+parseJson(txt json, txt object) ulong {
+	tokens is tokenizeJson(json)
+	reference := object as Ref
+	
+	return parseJsonObject(0, tokens, reference) - tokens.Size()
+}
+
+parseJsonObject(long advance, txt[] tokens, Ref object) ulong {
+	if advance >= tokens.Size() return tokens.Size()+1
+	if tokens[advance] != "{" return tokens.Size()+2
+	advance1 := parseJsonField(advance+1, tokens, object)
+	if advance1 >= tokens.Size() return advance1
+	if tokens[advance1] != "}" return tokens.Size()+3
+	return advance1+1
+}
+
+parseJsonField(long advance, txt[] tokens, Ref object) ulong {
+	if (advance+1) >= tokens.Size() return tokens.Size()+4
+	id := tokens[advance]
+	if id.CharAt(0) != '"' return tokens.Size()+5
+	if tokens[advance+1] != ":" return tokens.Size()+6
+
+	advance1 := parseJsonLiteral(advance+2, tokens, object, id.Remove(0))
+	if advance1 >= tokens.Size() return advance1
+	if tokens[advance1] == "," return parseJsonField(advance1+1, tokens, object)
+	return advance1+1
+}
+
+parseJsonLiteral(long advance, txt[] tokens, Ref object, txt id) ulong {
+	if advance >= tokens.Size() return tokens.Size()+7
+	next := tokens[advance]
+	if next == "{" return parseJsonObject(advance, tokens, object.getField@classic(id).getText@classic() as Ref)
+	else if next == "[" return tokens.Size()+8
+
+	// Set the corresponding field
+	field := object.getField@classic(id)
+	typeOfField := object.getFieldReference@classic(id).typeOfField@classic()
+	if typeOfField == type_text@std && next.CharAt(0) == '"' field.updateText@classic(next.Remove(0))
+	else if typeOfField == type_long@std && (next.CharAt(0).isNumeric@std() || next.CharAt(0) == '-') field.updateInt@classic(next as long)
+	else if typeOfField == type_ulong@std && next.CharAt(0).isNumeric@std() field.updateUInt@classic(next as ulong)
+	else {
+		return tokens.Size()+9
+	}
+
+	return advance+1
+}
+
+tokenizeJson(txt json) txt[] {
+	tokens is txt[]
+	advance = 0
+	for advance < json.Length() {
+		character := json.CharAt(advance)
+		if character == '{' tokens.Add("{")
+		else if character == '}' tokens.Add("}")
+		else if character == '[' tokens.Add("[")
+		else if character == ']' tokens.Add("]")
+		else if character == ':' tokens.Add(":")
+		else if character == ',' tokens.Add(",")
+		else if character == '-' {
+			number := "".InsertChar(character)
+			for json.getChar@std(advance+1).isNumeric@std() {
+				advance += 1
+				character = json.CharAt(advance)
+				number = number.InsertChar(character)
+			}
+			if json.getChar@std(advance+1) == '.' {
+				number = number.InsertChar('.')
+				for json.getChar@std(advance+1).isNumeric@std() {
+					advance += 1
+					character = json.CharAt(advance)
+					number = number.InsertChar(character)
+				}
+			}
+			tokens.Add(number)
+		} else if character.isNumeric@std() {
+			number1 := "".InsertChar(character)
+			for json.getChar@std(advance+1).isNumeric@std() {
+				advance += 1
+				character = json.CharAt(advance)
+				number1 = number1.InsertChar(character)
+			}
+			if json.getChar@std(advance+1) == '.' {
+				advance += 1
+				number1 = number1.InsertChar('.')
+			}
+			for json.getChar@std(advance+1).isNumeric@std() {
+				advance += 1
+				character = json.CharAt(advance)
+				number1 = number1.InsertChar(character)
+			}
+			tokens.Add(number1)
+		} else if character == '.' {
+			number2 := "."
+			for json.getChar@std(advance+1).isNumeric@std() {
+				advance += 1
+				character = json.CharAt(advance)
+				number2 = number2.InsertChar(character)
+			}
+			tokens.Add(number2)
+		} else if character == '"' {
+			string := "\""
+			for (advance+1) < json.Length() && json.getChar@std(advance+1) != '"' {
+				advance += 1
+				character = json.CharAt(advance)
+				if character == '\\' {
+					advance += 1
+					character = json.CharAt(advance)
+					if character == 'n'
+						string = string.InsertChar('\n')
+					else if character == 't'
+						string = string.InsertChar('\t')
+					else if character == '"'
+						string = string.InsertChar('"')
+					else if character == '\\'
+						string = string.InsertChar('\\')
+				} else {
+					string = string.InsertChar(character)
+				}
+			}
+			advance += 1
+			tokens.Add(string)
+		}
+		advance += 1
+	}
+	return tokens
 }
