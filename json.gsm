@@ -83,6 +83,7 @@ parseJsonLiteral(long advance, txt[] tokens, Ref object, txt id) ulong {
 	if typeOfField == type_text@std && next.CharAt(0) == '"' field.updateText@classic(next.Remove(0))
 	else if typeOfField == type_long@std && (next.CharAt(0).isNumeric@std() || next.CharAt(0) == '-') field.updateInt@classic(next as long)
 	else if typeOfField == type_ulong@std && next.CharAt(0).isNumeric@std() field.updateUInt@classic(next as ulong)
+	else if typeOfField == type_double@std && (next.CharAt(0).isNumeric@std() || next.CharAt(0) == '-' || next.CharAt(0) == '.') field.updateFloat@classic(next as double)
 	else {
 		return tokens.Size()+9
 	}
@@ -109,6 +110,7 @@ tokenizeJson(txt json) txt[] {
 				number = number.InsertChar(character)
 			}
 			if json.getChar@std(advance+1) == '.' {
+				advance += 1
 				number = number.InsertChar('.')
 				for json.getChar@std(advance+1).isNumeric@std() {
 					advance += 1
